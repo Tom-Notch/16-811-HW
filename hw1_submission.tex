@@ -10,6 +10,10 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{enumitem}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -194,7 +198,7 @@ def LDU(A: np.ndarray):
 
           \textbf{Solution:}
 
-          All the intermediate steps of LDU decomposition can be found in the jupyter notebook.
+          \textbf{All the intermediate steps of LDU decomposition can be found in the jupyter notebook.}
           Steps of LDU of $A_1$ is shown in Fig.~\ref{fig: A_1 LDU}.
 
           \begin{enumerate}
@@ -320,6 +324,7 @@ def LDU(A: np.ndarray):
                                       0.65561007  & 0.09365858  & -0.74926865
                                   \end{pmatrix}
                               \end{align*}
+                              Here $\Sigma_3$'s last singular value is smaller than $10^{-15}$, so it's regarded as zero.
                     \end{enumerate}
           \end{enumerate}
 
@@ -509,14 +514,25 @@ def solve_systems_of_equations(A: np.ndarray, b: np.ndarray) -> np.ndarray:
                     $$
                         Ax = (I - uu^T)x = x - u(u^Tx) = x - (u^Tx)u
                     $$
-                    The projection of $x$ onto $u$ is $u^Tx$.
+                    The amount of projection of $x$ onto $u$ is $u^Tx$.
                     Subtracting this projection from $x$ gives the projection of $x$ onto the hyperplane orthogonal to $u$.
-              \item The eigenvalues of $A$ are 1 and $1 - u^Tu = 0$.
+              \item The eigenvalues of $A$ are 1 and 0.
+                    Definition of eigenvalues:
                     \begin{align*}
-                        det(A - \lambda I) & = det(I - uu^T - \lambda I)  \\
+                        det(A - \lambda I) & = det(I - uu^T - \lambda I)      \\
                                            & = det((1 - \lambda)I - uu^T) = 0
                     \end{align*}
-              \item The null space of $A$ is the subspace spanned by $u$.
+                    \begin{enumerate}
+                        \item For any vector $x$ orthogonal to $u$:
+                              $$
+                                  Ax = (I - uu^T)x = x - (u^Tx)u = x
+                              $$
+                        \item For any vector $x$ parallel to $u$:
+                              $$
+                                  Ax = (I - uu^T)x = x - (u^Tx)u = x - x = 0
+                              $$
+                    \end{enumerate}
+              \item The null space of $A$ is the subspace spanned by $u$, because any vector $x$ parallel to $u$ will be projected to $\overrightarrow{0}$.
                     $$
                         Au = (I - uu^T)u = u - uu^Tu = u - u = 0
                     $$
@@ -561,9 +577,21 @@ def solve_systems_of_equations(A: np.ndarray, b: np.ndarray) -> np.ndarray:
                   Also, Tr is the trace operator that adds up the diagonal elements of its square matrix argument.]
 
           You will have more complicated expressions for x and y, involving the points {$p_i$} and {$q_i$}.
-\end{enumerate}
 
-% \bibliographystyle{IEEEtran}
-% \bibliography{SLAM}
+          \textbf{Solution:}
+          The realistic version of the problem's solution is the point-to-point \href{https://en.wikipedia.org/wiki/Iterative_closest_point}{\textit{iterative closest point (ICP) algorithm}} for point cloud matching/alignment, where the index of the points in the 2 point clouds are not matched, and even if they match, the points are not perfectly aligned due to imperfect perception.
+          In more challenging scenario, we could even have missing chunks of points in one of the point clouds, where we need to use point-to-plane ICP algorithm.
+
+          Regardlessly, the objective is to find:
+          $$
+              \argmin_{T \in SE(3)} \sum_{i = 1}^n \|\dot{q_i} - T\dot{p_i}\|^2
+          $$
+          Where $\dot{q_i}$ and $\dot{p_i}$ are the homogeneous coordinates of $q_i$ and $p_i$ respectively.
+
+          This is equivalent to find:
+          $$
+              \argmin_{R \in SO(3), t \in \mathbb{R}^3} \sum_{i = 1}^n \|q_i - (Rp_i + t)\|^2
+          $$
+\end{enumerate}
 
 \end{document}
