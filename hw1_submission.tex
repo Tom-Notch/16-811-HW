@@ -146,7 +146,7 @@ def LDU(A: np.ndarray):
     return P, L, D, U
             \end{lstlisting}
 
-          \begin{figure}[t]
+          \begin{figure*}[t]
               \centering
               \begin{minipage}[t]{0.3\textwidth}
                   \centering
@@ -162,7 +162,7 @@ def LDU(A: np.ndarray):
               \end{minipage}
               \caption{Function LDU run on $A_1$ of question 2}
               \label{fig: A_1 LDU}
-          \end{figure}
+          \end{figure*}
 
           Refer to my jupyter notebook for the full implementation and demonstration of the LDU decomposition algorithm other than the example given next page.
 
@@ -592,6 +592,152 @@ def solve_systems_of_equations(A: np.ndarray, b: np.ndarray) -> np.ndarray:
           $$
               \argmin_{R \in SO(3), t \in \mathbb{R}^3} \sum_{i = 1}^n \|q_i - (Rp_i + t)\|^2
           $$
+          Now let $\bar{q}$ and $\bar{p}$ be the centroids of $q_i$ and $p_i$ respectively, i.e., $\bar{q} = \frac{1}{n}\sum\limits_{i=1}^n q_i$, $\bar{p} = \frac{1}{n}\sum\limits_{i=1}^n p_i$.
+
+          And let $\hat{q_i} = q_i - \bar{q}$, $\hat{p_i} = p_i - \bar{p}$.
+
+          Then the objective becomes:
+          \begin{align*}
+                & \argmin_{R \in SO(3), t \in \mathbb{R}^3} \sum_{i = 1}^n \|q_i - (Rp_i + t)\|^2                                                                                                                            \\
+              = & \argmin_{R \in SO(3), t \in \mathbb{R}^3} \sum_{i = 1}^n \|(\hat{q_i} + \bar{q}) - [R(\hat{p_i} + \bar{p}) + t]\|^2                                                                                        \\
+              = & \argmin_{R \in SO(3), t \in \mathbb{R}^3} \sum_{i = 1}^n \|\hat{q_i} - R\hat{p_i} + (\bar{q} - R\bar{p} - t)\|^2                                                                                           \\
+              = & \argmin_{R \in SO(3), t \in \mathbb{R}^3} \{ \sum_{i = 1}^n \|\hat{q_i} - R\hat{p_i}\|^2 + n\|\bar{q} - R\bar{p} - t\|^2 + 2 \sum\limits_{n = 1}^n (\hat{q_i} - R \hat{p_i})^T (\bar{q} - R\bar{p} - t) \}
+          \end{align*}
+          It's easy to see that t is optimal when $t = \bar{q} - R\bar{p}$, i.e. when t is the difference of (rotated) centroids, as the second and the third term of the above equation become 0.
+
+          Now we have only $R$ left to optimize:
+          \begin{align*}
+              \argmin_{R \in SO(3)} \sum_{i = 1}^n \|\hat{q_i} - R\hat{p_i}\|^2
+          \end{align*}
+          Rewriting this into matrix form:
+
+          Let $\hat{Q}$ be a $3 \times n$ matrix whose columns are $\hat{q_i}$, and $\hat{P}$ be a $3 \times n$ matrix whose columns are $\hat{p_i}$.
+          $$
+              \hat{Q} = \begin{pmatrix}
+                            &           &        &           \\
+                  \hat{q_1} & \hat{q_2} & \cdots & \hat{q_n} \\
+                            &           &        &           \\\end{pmatrix},
+              \hat{P} = \begin{pmatrix}
+                            &           &        &           \\
+                  \hat{p_1} & \hat{p_2} & \cdots & \hat{p_n} \\
+                            &           &        &           \\
+              \end{pmatrix}
+          $$
+          Then the objective becomes:
+          \begin{align*}
+                & \argmin_{R \in SO(3)} \sum_{i = 1}^n \|\hat{q_i} - R\hat{p_i}\|^2                                           \\
+              = & \argmin_{R \in SO(3)} \|\hat{Q} - R\hat{P}\|_2^2                                                            \\
+              = & \argmin_{R \in SO(3)} Tr\{(\hat{Q} - R\hat{P})^T(\hat{Q} - R\hat{P})\}                                      \\
+              = & \argmin_{R \in SO(3)} Tr(\hat{Q}^T\hat{Q} - \hat{Q}^TR\hat{P} - \hat{P}^TR^T\hat{Q} + \hat{P}^TR^TR\hat{P}) \\
+              = & \argmin_{R \in SO(3)} Tr(\hat{Q}^T\hat{Q}) - 2 Tr(\hat{Q}^TR\hat{P}) + Tr(\hat{P}^T\hat{P})                 \\
+              = & \argmax_{R \in SO(3)} Tr(\hat{Q}^TR\hat{P})                                                                 \\
+              = & \argmax_{R \in SO(3)} Tr(R\hat{P}\hat{Q}^T)
+          \end{align*}
+          Now let $SVD(\hat{P}\hat{Q}^T) = U \Sigma V^T$, then:
+          \begin{align*}
+                & \argmax_{R \in SO(3)} Tr(R\hat{P}\hat{Q}^T) \\
+              = & \argmax_{R \in SO(3)} Tr(R U \Sigma V^T)    \\
+              = & \argmax_{R \in SO(3)} Tr(V^T R U \Sigma)
+          \end{align*}
+          Since $\Sigma$ is a diagonal matrix, $V^T R U$ is an orthogonal matrix, the above expression reaches maximum only when the diagonal term of $V^T R U$ reaches maximum, i.e. when $V^T R U = I$.
+          Therefore, $R = VU^T$.
+          However, $VU^T$ may not be a rotation matrix, so we need to find the nearest rotation matrix to $VU^T$.
+          That is, when $det(VU^T) = -1$, we need to flip the sign of the smallest singular value of $VU^T$, by $VU^T = V \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & -1 \end{pmatrix} U^T$.
+
+          Examples of the algorithm can be found in the jupyter notebook.
+          \begin{lstlisting}
+def generate_random_points(n: int) -> np.ndarray:
+    """Generate random points in 3D space.
+
+    Args:
+        n (int): number of points to generate
+
+    Returns:
+        np.ndarray: 3 x n array of random points, where each column is a point
+    """
+    return np.random.rand(3, n)
+          \end{lstlisting}
+          \begin{lstlisting}
+def generate_random_rigid_body_transformation():
+    """Generate a random rigid body transformation.
+
+    Returns:
+        R: 3 x 3 array representing the rotation matrix
+        t: 3 x 1 array representing the translation vector
+    """
+    # Generate a random rotation matrix
+    # Step 1: Generate a random axis (a unit vector)
+    axis = np.random.randn(3)
+    axis = axis / np.linalg.norm(axis)  # Normalize the vector to make it a unit vector
+
+    # Step 2: Generate a random angle between 0 and 2pi
+    angle = np.random.uniform(0, 2 * np.pi)
+
+    # Step 3: Use Rodrigues' rotation formula to construct the rotation matrix
+    K = np.array([[0, -axis[2], axis[1]],
+                  [axis[2], 0, -axis[0]],
+                  [-axis[1], axis[0], 0]])  # Cross-product matrix of the axis
+
+    I = np.eye(3)
+    R = I + np.sin(angle) * K + (1 - np.cos(angle)) * (K @ K)
+
+    assert np.allclose(np.linalg.det(R), 1), "The generated matrix is not a rotation matrix"
+
+    # Generate a random translation vector
+    t = np.random.rand(3, 1)
+
+    return R, t
+          \end{lstlisting}
+          \begin{lstlisting}
+def ICP(P: np.ndarray, Q: np.ndarray):
+    """point-to-point iterative closest point algorithm with aligned point indexes
+
+    Args:
+        P (np.ndarray): source point cloud
+        Q (np.ndarray): target point cloud
+    """
+    P = P.copy()
+    Q = Q.copy()
+
+    assert P.shape[0] == 3 and Q.shape[0] == 3, "Input point clouds must be 3D"
+    assert (
+        P.shape[1] == Q.shape[1]
+    ), "Input point clouds must have the same number of points"
+
+    # Center the point clouds
+    P_centered = P - np.mean(P, axis=1, keepdims=True)
+    Q_centered = Q - np.mean(Q, axis=1, keepdims=True)
+
+    U, _, Vt = np.linalg.svd(P_centered @ Q_centered.T)
+
+    if np.linalg.det(U @ Vt) < 0:
+        Vt[-1] *= -1
+
+    R = Vt.T @ U.T
+    t = np.mean(Q, axis=1, keepdims=True) - R @ np.mean(P, axis=1, keepdims=True)
+
+    return R, t
+          \end{lstlisting}
+          \begin{lstlisting}
+P = generate_random_points(100)
+R, t = generate_random_rigid_body_transformation()
+print("R =\n", R, "\nt =\n", t)
+Q = R @ P + t
+          \end{lstlisting}
+          \begin{lstlisting}
+R_ICP, t_ICP = ICP(P, Q)
+print("R_ICP =\n", R_ICP, "\nt_ICP =\n", t_ICP)
+          \end{lstlisting}
+          \begin{lstlisting}
+assert np.allclose(R, R_ICP, atol=1e-3), "The rotation matrix is not correct"
+assert np.allclose(t, t_ICP, atol=1e-3), "The translation vector is not correct"
+          \end{lstlisting}
+
+          \begin{figure*}[h]
+              \centering
+              \includegraphics[width=.99\linewidth]{figs/ICP.png}
+              \caption{ICP algorithm run on random points and transformation}
+          \end{figure*}
 \end{enumerate}
 
 \end{document}
