@@ -1,0 +1,224 @@
+\documentclass[conference,onecolumn]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx,subcaption}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\IEEEoverridecommandlockouts
+
+\lstset{
+    language=Python,             % Set language to Python
+    basicstyle=\ttfamily\small,  % Set font to small and monospaced
+    keywordstyle=\color{blue},   % Color keywords
+    stringstyle=\color{green},   % Color strings
+    commentstyle=\color{gray},   % Color comments
+    showstringspaces=false,      % Do not display string spaces
+    frame=single,                % Add a frame around the code
+    breaklines=true              % Line breaks for long lines
+}
+
+\begin{document}
+
+\title{\Large Assignment 2 --- Math Fundamentals for Robotics 16-811, Fall 2024}
+
+\author{
+    \IEEEauthorblockN{Mukai Yu}
+    \IEEEauthorblockA{\textit{MSR, CMU} \\
+        Pittsburgh, PA\\
+        \href{mailto:mukaiy@andrew.cmu.edu}{mukaiy@andrew.cmu.edu}}
+}
+
+\maketitle
+
+\begin{enumerate}[label=\arabic{enumi}.]
+    \item \begin{enumerate}
+              \item Implement a procedure that interpolates $f(x)$ based on a divided difference approach.
+
+                    The procedure should take as input the following parameters:
+                    $$
+                        x, x_0, ... , x_n, f(x_0), ... , f(x_n) (\text{with distinct } x_0, x_1, ... , x_n).
+                    $$
+                    The procedure should compute an interpolated value for $f(x)$ based on the given data points $(x_0, f(x_0))$, $(x_1, f(x_1))$, ... , $(x_n, f(x_n))$.
+
+                    Note: The procedure should use all the data points $(x_i, f(x_i)), i = 0, ... , n$, effectively implementing an interpolating polynomial of degree n (or less, depending on the data).
+              \item use your procedure to interpolate $cos(\pi x)$ at $x = \frac{3}{10}$, based on known values of $(x, cos(\pi x))$ at the following x locations: $0, \frac{1}{8}, \frac{1}{4}, \frac{3}{8}, \frac{1}{2}$.
+              \item Now consider the function
+                    $$
+                        f(x) = \frac{2}{1 + 9x^2},
+                    $$
+                    with input data given at the points
+                    $$
+                        x_i = i \frac{2}{n} - 1, i = 0, ... , n.
+                    $$
+                    Use your procedure to estimate $f(x)$ at $x = 0.07$, with $n = 2$.
+
+                    Use your procedure to estimate $f(x)$ at $x = 0.07$, with $n = 4$.
+
+                    Use your procedure to estimate $f(x)$ at $x = 0.07$, with $n = 40$.
+
+                    What is the actual value of $f(0.07)$?
+              \item In this part, you are to (numerically) estimate the maximum interpolation error
+                    $$
+                        E_n = \max_{-1 \leq x \leq 1} |f(x) - p_n(x)|.
+                    $$
+                    (You don't need to do anything fancy; simply discretize the interval [-1, 1] very finely - much more finely than the discretization implied by n.
+                    Then compute errors at the resulting discrete points.)
+
+                    Estimate $E_n$ for $n = 2, 4, 6, 8, 10, 12, 14, 16, 18, 20$, and $40$, for the function $f(x) = \frac{2}{1 + 9 x^2}$ given above and $p_n(x)$ the interpolating polynomial based on n using data as in part (c).
+
+                    Do the error estimates make sense? Explain your results.
+          \end{enumerate}
+          \clearpage
+    \item Suppose you wish to build a “sliding-window interpolation table” (as discussed in class) with entries of the form $(x, f(x))$ for the function $f(x) = sin x$ over the interval $[0, 2\pi]$.
+          Please use uniform spacing between points.
+          How fine must the table spacing be in order to ensure 6 decimal digit $\text{accuracy}^1$, assuming that you will use linear interpolation between adjacent points in the table?
+          How fine must the table spacing be if you will use quadratic interpolation?
+          In each case, how many entries do you need in the table?
+
+          \clearpage
+    \item Implement Newton's Method. Consider the following equation:
+          $$
+              x = tan x.
+          $$
+          There are an infinite number of solutions x to this equation.
+          Use Newton's method to find the two solutions on either side of 15.
+          In other words, find two solutions $x_{low} < 15 < x_{high}$ such that the interval $[x_{low}, x_{high}]$ contains no other solutions. — Use any techniques you need to start Newton in regions of convergence.
+          Those regions may be very small.
+
+          \clearpage
+    \item Suppose $\epsilon$ is a root of order 2 of $f(x)$, meaning $f(\epsilon) = 0, f'(\epsilon) = 0$ and $f''(\epsilon) \neq 0$.
+          \begin{enumerate}
+              \item Show that in this case Newton's method no longer converges quadratically.
+                    Do so by showing that the method now converges linearly.
+              \item We can modify Newton's method in this case: Show that the iteration
+                    $$
+                        x_{n+1} = x_n - 2 \frac{f(x_n)}{f'(x_n)}
+                    $$
+                    does converge quadratically (or faster) when $\epsilon$ is a root of order 2 of $f(x)$.
+          \end{enumerate}
+          Throughout this problem you may assume that $f(x)$ has as many continuous derivatives as you need, for instance that $f'''(x)$ is continuous in a neighborhood of $\epsilon$.
+
+          \textbf{Recommendation:} Use a Taylor series for $h(x) = \frac{f (x)}{f'(x)}$, similar to what we did in lecture when examining convergence of Newton's method.
+          You do not need anything more complicated.
+          However, you will find it useful to remember L'Hopital's rule from calculus when computing $h(\epsilon)$ and $h'(\epsilon)$.
+          Do not worry about the exact value of $h''(\epsilon)$.
+
+          \clearpage
+    \item
+          \begin{enumerate}
+              \item Implement Muller's method.
+              \item Use Muller's method to find good numerical approximations for all the real and complex roots of the polynomial $p(x) = x^3 + x + 1$.
+          \end{enumerate}
+
+          \clearpage
+    \item Consider the two univariate polynomials
+          \begin{align*}
+              p(x) & = x^3 - 3 x^2 + x - 3 \\
+              q(x) & = x^2 + x - 12
+          \end{align*}
+
+          \begin{enumerate}
+              \item Using the method of resultants, decide whether $p(x)$ and $q(x)$ share a common root.
+              \item If the two polynomials share a common root, use the ratio method discussed in class to find that root.
+          \end{enumerate}
+
+          \clearpage
+    \item Consider the two bivariate polynomials
+          \begin{align*}
+              p(x, y) & = 2 x^2 + 2 y^2 - 4x - 4y + 3   \\
+              q(x, y) & = x^2 + y^2 + 2xy - 5x - 3y + 4
+          \end{align*}
+
+          \begin{enumerate}
+              \item Draw the zero contour $p(x, y) = 0$ and the zero contour $q(x, y) = 0$, with x and y real.
+              \item Using the method of resultants, solve for the intersection points of these contours, i.e., find all (x, y) for which $p(x, y) = 0 = q(x, y)$, with x and y real.
+                    Do so by treating the polynomials p and q as functions of y, temporarily viewing x as a constant.
+                    Obtain a $4 \times 4$ matrix whose determinant, now a function of x, is the desired resultant.
+                    Find the x-roots of that determinant, thereby projecting the intersection points onto the x-axis.
+                    Use those x-roots to find the y-coordinates of the intersection points.
+                    Verify your intersection points.
+          \end{enumerate}
+
+          \clearpage
+    \item You are preparing a robotic unicycle to take part in a circus act.
+          For most of the show, a talented acrobat rides the unicycle.
+          But at one point, the acrobat jumps oﬀ the unicycle onto a trapeze.
+          After a short trapeze act, the acrobat leaps through the ring of fire in the center of the stage to land on the waiting unicycle, which has moved autonomously to the other side.
+          Your job is to plan a path for the unicycle to take around the ring of ﬁre to the acrobat's landing point.
+
+          You are given a precomputed set of paths which all begin at different points, avoid the ring of ﬁre, and end at the destination (shown below).
+          You must mimic these paths as closely as possible, since they are precisely choreographed for the circus act.
+          However, the acrobat is only human, and does not position the unicycle precisely at any of the paths' starting points.
+          You will need to interpolate a new path from other paths with nearby starting points.
+
+          The Destination point is (8, 8). The Ring of Fire is a circle of radius 1.5 centered at (5, 5).
+
+          The precomputed paths are given in the text file paths.txt.
+          Every pair of lines in the text file represents a path, which is a sequence of 50 points.
+          The first line contains the x coordinates, and the second contains the y coordinates for one path.
+          The file format is:
+          \begin{align*}
+              \begin{matrix}
+                  x_0^{(1)} & x_1^{(1)} & \ldots & x_{48}^{(1)} & x_{49}^{(1)} \\
+                  y_0^{(1)} & y_1^{(1)} & \ldots & y_{48}^{(1)} & y_{49}^{(1)} \\
+                  x_0^{(2)} & x_1^{(2)} & \ldots & x_{48}^{(2)} & x_{49}^{(2)} \\
+                  y_0^{(2)} & y_1^{(2)} & \ldots & y_{48}^{(2)} & y_{49}^{(2)} \\
+                  \ldots    & \ldots    & \ldots & \ldots       & \ldots
+              \end{matrix}
+          \end{align*}
+          \begin{center}
+              (Notation: the superscripts (1), (2), $\ldots$ are path indices, not derivatives.)
+          \end{center}
+
+          \begin{enumerate}
+              \item Write a system of linear equations (in the form $Av = b$, with $v$ representing variables of some sort, appropriately chosen) and constraints (for instance, $v_1 \leq 0$) that will help you determine whether a 2D point (x, y) falls within the triangle formed by three 2D points $(x^{(i)}, y^{(i)})$, $(x^{(j)}, y^{(j)})$, and $(x^{(k)}, y^{(k)})$.
+                    (Part of the problem is to think about how you might do this.)
+              \item Implement an algorithm to create a path for the unicycle as follows:
+
+                    [Notation: For a path p, p(t) is the 2D point $(x^{(t)}, y^{(t)})$ that describes the location of the path at time t.
+                    Exactly what time scale you choose is up to you, so long as the unicycle's motion starts at time t = 0.]
+
+                    \begin{itemize}
+                        \item Assume the algorithm is given the unicycle's starting location at time t = 0.
+                        \item Your algorithm should first pick three paths $p^{(i)}$, $p^{(j)}$, and $p^{(k)}$ (from the file paths.txt), subject to some constraints described next.
+                        \item The three paths should all lie on the same side of the ring of fire, all passing either to the left or all to the right of the ring.
+                        \item Your algorithm should construct a new path p as a weighted sum of these three paths.
+                              So, at each time t, $p(t) = \alpha_i p^{(i)}(t) + \alpha_j p^{(j)}(t) + \alpha_k p^{(k)}(t)$, with p(0) the given starting location of the unicycle and with the weights $\alpha_i$, $\alpha_j$, $\alpha_k$ fixed throughout.
+                        \item You should choose these weights so that p(0) lies within the triangle formed by the starting locations of the three paths that your algorithm picks, that is, within the triangle formed by the points $p^{(i)}(0)$, $p^{(j)}(0)$, and $p^{(k)}(0)$.
+                        \item Your algorithm should be able to produce a value p(t) for all relevant (continuous) times t prior to reaching the Destination, not just for the discrete time snapshots given in paths.txt.
+                              (It is here that interpolation comes into play.
+                              Use whatever interpolation method you ﬁnd useful.
+                              Something simple is fine.)
+                        \item At all times, p(t) should lie outside the ring of fire.
+                    \end{itemize}
+
+                    Comment: The unicycle's starting position should fall within the triangle formed by three paths' starting points, but there may be many valid such triples of paths.
+                    (You may assume there is at least one.)
+                    You should develop your own criteria for choosing one such triple of paths, $p^{(i)}$, $p^{(j)}$, $p^{(k)}$.
+
+                    Specificity: You only need to write code to solve the particular problem (with the particular destination, ring of ﬁre, and precomputed paths) described here, not a general purpose algorithm.
+              \item Discuss any decisions you made in your implementation, for example: How did you pick the triple of paths $p^{(i)}$, $p^{(j)}$, $p^{(k)}$?
+                    How did you choose the weights $\alpha_i$, $\alpha_j$ , $\alpha_k$?
+                    How did you decide on a time scale for t?
+                    How did you decide on an interpolation method?
+              \item Interpolate paths for the starting points (0.8, 1.8), (2.2, 1.0) and (2.7, 1.4).
+                    For each starting point, on the same graph, plot the ring of fire, the three paths being interpolated, and the interpolated path.
+                    The paths should not touch the ring of fire.
+              \item Discuss how your algorithm would need to be modified (if at all) if more obstacles like the ring of fire were to be introduced.
+          \end{enumerate}
+\end{enumerate}
+
+\end{document}

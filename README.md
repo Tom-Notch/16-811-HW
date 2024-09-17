@@ -1,6 +1,6 @@
-# 16-811 Homework 1
+# 16-811 Homework 2
 
-[![pre-commit](https://github.com/Tom-Notch/16-811-HW-1/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/Tom-Notch/16-811-HW-1/actions/workflows/pre-commit.yml)
+[![pre-commit](https://github.com/Tom-Notch/16-811-HW/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/Tom-Notch/16-811-HW/actions/workflows/pre-commit.yml)
 
 ## Author
 
@@ -12,14 +12,8 @@
 
   ```Shell
   conda env create -f environment.yml
-  conda activate 16-811-HW-1
+  conda activate 16-811-HW-2
   ```
-
-- [LDU.ipynb](src/LDU.ipynb) -- LDU decomposition -- Question 1, 2
-
-- [SVD.ipynb](src/SVD.ipynb) -- SVD decomposition -- Question 2, 3
-
-- [ICP.ipynb](src/ICP.ipynb) -- ICP algorithm -- Question 5
 
 ## Developer Quick Start
 
