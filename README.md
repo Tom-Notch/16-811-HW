@@ -1,4 +1,4 @@
-# 16-811 Homework 2
+# 16-811 Robo Math Homework 2
 
 [![pre-commit](https://github.com/Tom-Notch/16-811-HW/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/Tom-Notch/16-811-HW/actions/workflows/pre-commit.yml)
 
@@ -12,7 +12,7 @@
 
   ```Shell
   conda env create -f environment.yml
-  conda activate 16-811-HW-2
+  conda activate 16811-hw
   ```
 
 ## Developer Quick Start
