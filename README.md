@@ -1,4 +1,4 @@
-# 16-811 Homework 1
+# 16-811 Robo Math Homework 1
 
 [![pre-commit](https://github.com/Tom-Notch/16-811-HW-1/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/Tom-Notch/16-811-HW-1/actions/workflows/pre-commit.yml)
 
@@ -12,7 +12,7 @@
 
   ```Shell
   conda env create -f environment.yml
-  conda activate 16-811-HW-1
+  conda activate 16811-hw
   ```
 
 - [LDU.ipynb](src/LDU.ipynb) -- LDU decomposition -- Question 1, 2

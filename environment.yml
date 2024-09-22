@@ -1,4 +1,4 @@
-name: 16811-hw1
+name: 16811-hw
 channels:
   - conda-forge
 dependencies:
