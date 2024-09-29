@@ -1,0 +1,187 @@
+\documentclass[conference,onecolumn]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx,subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\IEEEoverridecommandlockouts
+
+\lstset{
+    language=MATLAB,             % Set language to MATLAB
+    basicstyle=\ttfamily\small,  % Set font to small and monospaced
+    keywordstyle=\color{blue},   % Color keywords
+    stringstyle=\color{green},   % Color strings
+    commentstyle=\color{gray},   % Color comments
+    showstringspaces=false,      % Do not display string spaces
+    frame=single,                % Add a frame around the code
+    breaklines=true              % Line breaks for long lines
+}
+
+\begin{document}
+
+\title{\Large Assignment 3 --- Math Fundamentals for Robotics 16-811, Fall 2024}
+
+\author{
+    \IEEEauthorblockN{Mukai Yu}
+    \IEEEauthorblockA{\textit{MSR, CMU} \\
+        Pittsburgh, PA\\
+        \href{mailto:mukaiy@andrew.cmu.edu}{mukaiy@andrew.cmu.edu}}
+}
+
+\maketitle
+
+\begin{enumerate}[label=\arabic{enumi}.]
+    \item Consider the function $f (x) = sin x - 0.5$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
+          \begin{enumerate}
+              \item What is the Taylor series expansion for $f (x)$ around $x = 0$ ?
+              \item Graph $f (x)$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
+              \item Determine the best uniform approximation by a quadratic to the function $f (x)$ on the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
+                    What are the $L_{\infty}$ and $L_2$ errors for this approximation?
+              \item Determine the best least-squares approximation by a quadratic to the function $f (x)$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
+                    What are the $L_{\infty}$ and $L_2$ errors for this approximation?
+          \end{enumerate}
+          Terminology: Suppose an approximation has error function e(x), with x in interval $[a, b]$.
+          The $L_{\infty}$ error is $||e(x)||_{\infty} = \max_{a \leq x \leq b} |e(x)|$ and the $L_2$ error is $||e(x)||_2 = \sqrt{\int_a^b |e(x)|^2 dx}$.
+
+          For your code submission, submit any code you used.
+
+          In your pdf, please show all your hand derivations and code results, and replicate any code you would like the TAs to see.
+
+    \item Suppose very accurate values of some function $f (x)$ are given at the points $0 = x_0, x_1, \cdots , x_100 = 1$, with the ${x_i}$ uniformly distributed over the interval [0, 1].
+
+          (So $x_i = \frac{i}{100}, i = 0, \cdots , 100$.)
+
+          The values $\{f (x_i)\}$ are given in the file 'problem2.txt' in sequential order
+
+          (so, for example, $f (0.27) = f (x_{27}) = -0.964603914513021$).
+
+          Use the method of normal equations discussed in class, to find a description of $f (x)$ as the sum of a very few polynomials and cosines and sines.
+          (You may be able to guess the answer since the function is fairly simple, but please also use the method of normal equations.)
+
+          For code, submit any code you used.
+          In your pdf, replicate any code you would like the TAs to see, show your results and explain how you obtained them.
+          If your search for a solution first considered some incorrect solutions, mention those and say how they informed your search for the correct solution.
+
+              [Hint: Try to express $f (x)$ as a linear combination of the functions, $1, x, x^2, \cdots , cos(\pi x), sin(\pi x), cos(2\pi x), sin(2\pi x), \cdots$.
+                  Use the method of normal equations.
+                  That method will not be enough by itself, since the underlying functions are redundant (more than a basis).
+                  However, that method is useful as a subroutine in a search.
+                  Try to find a very simple description of the function $f (x)$ by determining which coefficients in your sum may be
+                  set to zero.
+                  There may be multiple candidate answers; find one with the fewest nonzero coefficients.
+                  Graphing the function may be helpful in your search.
+                  You should need at most 3 nonzero coefficients when writing f (x) as a sum of the functions $1, x, x^2, \cdots , cos(\pi x), sin(\pi x), cos(2\pi x), sin(2\pi x), \cdots$.]
+
+    \item The Chebyshev polynomials of the first kind, $T_n(x)$, are defined indirectly on [-1, 1] by:
+          \begin{align*}
+              T_n(cos \theta) = cos(n \theta), \text{for } n \geq 0
+          \end{align*}
+          Expanding cosine, one finds the recurrence relation $T_{n+1}(x) = 2xT_n(x)-T_{n-1}(x)$, for $n > 0$.
+          \begin{enumerate}
+              \item Derive $T_4$ and $T_5$. (As always, please show your handwritten work.)
+              \item Without actually computing or working out any integrals, prove that $T_4(x)$ and $T_5(x)$ are orthogonal polynomials relative to the inner product
+                    $$
+                        < g, h > = \int_{-1}^{1} (1 - x^2)^{-\frac{1}{2}}g(x)h(x)dx.
+                    $$
+                    [Hint: Look carefully at the inner product and use a property of the polynomials.]
+              \item Recall that when we have an inner product on a vector space, we may define the length of vector v by $||v|| = \sqrt{< v, v >}$.
+
+                    Here, we may view functions as vectors with an inner product defined by an integral
+                    as above.
+                    Then the length of $T_n(x)$ is the number $\sqrt{< v, v >}$.
+
+                    It turns out that all $T_n(x)$, with $n > 0$, have the same length.
+
+                    Prove this fact by hand-computing the length of $T_n(x)$, that is, by working out the relevant integral (leave n symbolic, assume $n > 0$).
+
+                    (Hint: You will likely find it useful to make the substitution $x = cos \theta$ in the integral for $< T_n, T_n >$. Don't forget to change the interval of integration as well.)
+              \item Finally, show that $< T_i, T_j > = 0$ for all i and j such that $i \geq 0, j \geq 0$, and $i \neq j$.
+
+                    (There are different ways to prove this, e.g., by working out an integral explicitly or by combining known facts from above and lecture.)
+          \end{enumerate}
+          No code is expected or needed for any part of this problem.
+
+          In your pdf, please show all your derivations, proofs, and handwritten work.
+
+    \item After weeks of work you have finally completed construction of a gecko robot.
+          It is a quadruped robot with suctioning feet that allow it to walk on walls.
+          It is also equipped with a Kinect-like sensor, providing a 3D point cloud observation of the world.
+          You want to use these point clouds to reason about the environment and aid in navigation.
+          \begin{enumerate}
+              \item You boot up the robot and place it on a table, taking an initial observation.
+                    The observation is saved in the provided clear table.txt, and lists (x, y, z) locations in the following format:
+                    \begin{table}[H]
+                        \centering
+                        \begin{tabular}{ccc}
+                            $x_1$ & $y_1$    & $z_1$ \\
+                                  & $\cdots$ &       \\
+                            $x_n$ & $y_n$    & $z_n$
+                        \end{tabular}
+                    \end{table}
+                    Points are in units of meters and the positive x-direction is right, positive y-direction is down, and positive z-direction is forward.
+                    Find the least-squares approximation plane that fits the data.
+                    Visualize your fitted plane along with the data.
+                    What is the average distance of a point in the data set to the fitted plane?
+
+                    \textbf{Comment:} The phrase “least-squares” is ambiguous. Below are descriptions of two possibilities that might occur to you.
+                    Please use Linear Regression.
+                    That approach is similar to our discussion of the normal equations in lecture.
+
+                    \textbf{Orthogonal-Distance Regression:} In this approach, one computes the SVD decomposition of the $n \times 3$ matrix whose rows are the data points translated so their centroid is at the origin.
+                    It turns out that the third column of V is normal to a plane that minimizes the sum of squared orthogonal distances between the translated points and the plane.
+                    (This is a nice result to know.)
+
+                    \textbf{Linear Regression:} This regression is based on the idea that, for perfectly planar data, all the points would satisfy a plane equation of the form $ax + by + cz + d = 0$.
+                    So one has a natural error $\sum_i (axi + byi + czi + d)^2$, with i indexing the data points.
+                    One chooses the coefficients {a, b, c, d} so as to minimize this error.
+                    In order to avoid degeneracies, one requires that not all of {a, b, c, d} be 0.
+
+                    \textbf{Please use this approach.}
+
+                    (Additional comments: (i) One convenient approach is to set one of the coefficients {a, b, c, d} to be 1 or -1 while letting the others vary in order to compute the best plane.
+                    (ii) Observe that $|ax_i + by_i + cz_i + d|$ is related to but not necessarily exactly the distance of the ith data point from the plane described by {a, b, c, d}.)
+              \item Interested in your gecko robot, your cat jumps up on the table.
+                    You take a second observation, saved as the provided cluttered table.txt.
+                    Using the same method as above, find the least-squares fit to the new data.
+                    How does it look? Why?
+              \item Can you suggest a way to still find a fit to the plane of the table regardless of clutter?
+                    Verify your idea by writing a program that can successfully find the dominant plane in a list of points regardless of outliers.
+                        [Hint: You may assume that the number of points in the plane is much larger than the number of points not in the plane.]
+                    Visualize cluttered table.txt with your new plane.
+              \item Encouraged by your results when testing on a table, you move your geckobot into the hallway and take an observation saved as the provided clean hallway.txt.
+                    Describe an extension to your solution to part (c) that finds the four dominant planes shown in the scene, then implement it and visualize the data and the four planes.
+
+                    You may assume that there are roughly the same amount of points in each plane.
+              \item You decide it is time to test your gecko robot's suction feet and move it to a different hallway.
+                    The feet are strong enough to ignore the force of gravity, allowing the robot to walk on the floor, walls, or ceiling.
+                    However, the locomotion of the legs works best on smooth surfaces with few obstacles.
+                    Using your solution from part (d), describe how you can mathematically characterize the smoothness of each surface.
+                    Load the provided scan cluttered hallway.txt, find and plot the four wall planes, describe which surface is safest for your robot to traverse, and provide the smoothness scores from your mathematical characterization.
+
+                    Note that you may no longer assume that there are roughly the same amount of points in each plane.
+          \end{enumerate}
+          Parts (c), (d), and (e) intentionally leave room for some creativity and design.
+          There may be several good approaches.
+
+          Please submit code for all parts (a), (b), (c), (d), (e) of this problem.
+          In your pdf, explain what you did, how to run your code, and what results you obtained.
+          Describe any design decisions you made.
+          Include as well in your pdf any images you used to visualize data, and explain their meanings.
+          Finally, replicate in your pdf any code you would like the TAs to see.
+\end{enumerate}
+
+\end{document}

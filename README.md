@@ -1,4 +1,4 @@
-# 16-811 Robo Math Homework 2
+# 16-811 Robo Math Homework 3
 
 [![pre-commit](https://github.com/Tom-Notch/16-811-HW/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/Tom-Notch/16-811-HW/actions/workflows/pre-commit.yml)
 
