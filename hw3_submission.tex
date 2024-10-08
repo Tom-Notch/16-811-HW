@@ -454,11 +454,39 @@ def normal_equation_method(xi: np.array, yi: np.array, n_poly: int, n_trig: int,
             Expanding cosine, one finds the recurrence relation $T_{n+1}(x) = 2xT_n(x)-T_{n-1}(x)$, for $n > 0$.
             \begin{enumerate}
                   \item Derive $T_4$ and $T_5$. (As always, please show your handwritten work.)
+
+                        \textbf{Solution:}
+                        \begin{align*}
+                               & \begin{cases}
+                                    T_0(x) & = 1 \\
+                                    T_1(x) & = x
+                              \end{cases} \\
+                               & \Downarrow                 \\
+                               & \begin{cases}
+                                    T_2(x) = 2xT_1(x) - T_0(x) = 2x^2 - 1        \\
+                                    T_3(x) = 2xT_2(x) - T_1(x) = 4x^3 - 3x       \\
+                                    T_4(x) = 2xT_3(x) - T_2(x) = 8x^4 - 8x^2 + 1 \\
+                                    T_5(x) = 2xT_4(x) - T_3(x) = 16x^5 - 20x^3 + 5x
+                              \end{cases}
+                        \end{align*}
                   \item Without actually computing or working out any integrals, prove that $T_4(x)$ and $T_5(x)$ are orthogonal polynomials relative to the inner product
                         $$
                               < g, h > = \int_{-1}^{1} (1 - x^2)^{-\frac{1}{2}}g(x)h(x)dx.
                         $$
                         [Hint: Look carefully at the inner product and use a property of the polynomials.]
+
+                        \textbf{Solution:}
+
+                        $x = \cos(\theta)$, then $dx = -\sin(\theta) d\theta$.
+                        \begin{align*}
+                              < T_4, T_5 > & = \int_{-1}^{1} (1 - x^2)^{-\frac{1}{2}} T_4(x) T_5(x) dx                                                         \\
+                                           & = \int_{-\pi}^{0} (1 - \cos^2(\theta))^{-\frac{1}{2}} T_4(\cos(\theta)) T_5(\cos(\theta)) (- \sin(\theta)d\theta) \\
+                                           & = \int_{-\pi}^{0} \frac{\cos(4\theta) \cos(5\theta)}{- \sin(\theta)} (- \sin(\theta)d\theta)                      \\
+                                           & = \int_{-\pi}^{0} \cos(4\theta) \cos(5\theta) d\theta                                                             \\
+                                           & = \int_{-\pi}^{0} \frac{1}{2} \left[ \cos(9\theta) + \cos(\theta) \right] d\theta                                 \\
+                                           & = \frac{1}{2} \left[ \frac{\sin(9\theta)}{9} + \sin(\theta) \right] \rvert_{-\pi}^{0}                             \\
+                                           & = 0
+                        \end{align*}
                   \item Recall that when we have an inner product on a vector space, we may define the \textit{length of vector} v by $||v|| = \sqrt{< v, v >}$.
 
                         Here, we may view functions as vectors with an inner product defined by an integral
@@ -470,17 +498,38 @@ def normal_equation_method(xi: np.array, yi: np.array, n_poly: int, n_trig: int,
                         Prove this fact by hand-computing the length of $T_n(x)$, that is, by working out the relevant integral (leave n symbolic, assume $n > 0$).
 
                         (Hint: You will likely find it useful to make the substitution $x = cos \theta$ in the integral for $< T_n, T_n >$. Don't forget to change the interval of integration as well.)
+
+                        \textbf{Solution:}
+
+                        $x = \cos(\theta)$, then $dx = -\sin(\theta) d\theta$.
+                        \begin{align*}
+                              < T_n, T_n > & = \int_{-1}^{1} (1 - x^2)^{-\frac{1}{2}} T_n(x) T_n(x) dx                                     \\
+                                           & = \int_{-\pi}^{0} (1 - \cos^2(\theta))^{-\frac{1}{2}} \cos^2(n\theta) (- \sin(\theta)d\theta) \\
+                                           & = \int_{-\pi}^{0} \cos^2(n\theta) d\theta                                                     \\
+                                           & = \int_{-\pi}^{0} \frac{1}{2} \left[ \cos(2n\theta) + 1 \right] d\theta                       \\
+                                           & = \frac{1}{2} \left[ \frac{\sin(2n\theta)}{2n} + \theta \right] \rvert_{-\pi}^{0}             \\
+                                           & = \frac{\pi}{2}
+                        \end{align*}
                   \item Finally, show that $< T_i, T_j > = 0$ for all i and j such that $i \geq 0, j \geq 0$, and $i \neq j$.
 
                         (There are different ways to prove this, e.g., by working out an integral explicitly or by combining known facts from above and lecture.)
+
+                        \textbf{Solution:}
+
+                        $x = \cos(\theta)$, then $dx = -\sin(\theta) d\theta$.
+                        \begin{align*}
+                              < T_i, T_j > & = \int_{-1}^{1} (1 - x^2)^{-\frac{1}{2}} T_i(x) T_j(x) dx                                                            \\
+                                           & = \int_{-\pi}^{0} (1 - \cos^2(\theta))^{-\frac{1}{2}} T_i(\cos(\theta)) T_j(\cos(\theta)) (- \sin(\theta)d\theta)    \\
+                                           & = \int_{-\pi}^{0} \frac{\cos(i\theta) \cos(j\theta)}{- \sin(\theta)} (- \sin(\theta)d\theta)                         \\
+                                           & = \int_{-\pi}^{0} \cos(i\theta) \cos(j\theta) d\theta                                                                \\
+                                           & = \int_{-\pi}^{0} \frac{1}{2} \left[ \cos((i + j)\theta) + \cos((i - j)\theta) \right] d\theta                       \\
+                                           & = \frac{1}{2} \left[ \frac{\sin((i + j)\theta)}{i + j} + \frac{\sin((i - j)\theta}{i - j}) \right] \rvert_{-\pi}^{0} \\
+                                           & = 0
+                        \end{align*}
             \end{enumerate}
             No code is expected or needed for any part of this problem.
 
             In your pdf, please show all your derivations, proofs, and handwritten work.
-
-            \textbf{Solution:}
-
-
 
             \clearpage
       \item After weeks of work you have finally completed construction of a gecko robot.
