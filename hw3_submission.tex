@@ -384,6 +384,68 @@ def least_square_approximation(f, n: int, interval: list):
                         Graphing the function may be helpful in your search.
                         You should need at most 3 nonzero coefficients when writing f (x) as a sum of the functions $1, x, x^2, \cdots , cos(\pi x), sin(\pi x), cos(2\pi x), sin(2\pi x), \cdots$.]
 
+            \textbf{Solution:}
+            \begin{lstlisting}[language=Python]
+def normal_equation_method(xi: np.array, yi: np.array, n_poly: int, n_trig: int, tol: float = 1e-5):
+    """Use the method of normal equations to fit a polynomial and trigonometric function to the data.
+
+    Args:
+        xi (np.array): xi data points
+        yi (np.array): fi data points
+        n_poly (int): number of polynomial terms
+        n_trig (int): number of trigonometric terms
+        tol (float, optional): tolerance for filtering out small coefficients. Defaults to 1e-5.
+    """
+
+    xi = xi.reshape(-1, 1).copy()
+    yi = yi.reshape(-1, 1).copy()
+
+    assert xi.shape == yi.shape, "xi and yi must have the same shape"
+
+    # Construct the design matrix
+    A = np.zeros((len(xi), n_poly + 2 * n_trig))
+    for i in range(n_poly):
+        A[:, i] = (xi**i)[:, 0]
+    for i in range(n_trig):
+        A[:, n_poly + i] = np.sin((i + 1) * np.pi * xi)[:, 0]
+        A[:, n_poly + n_trig + i] = np.cos((i + 1) * np.pi * xi)[:, 0]
+
+    # Use least squares to solve for the coefficients
+    coeff, _, _, _ = np.linalg.lstsq(A, yi, rcond=None)
+
+    # Filter out coefficients that are close to zero
+    coeff[np.abs(coeff) < tol] = 0
+
+    x = sp.symbols("x", real=True)
+
+    p = 0
+    for i in range(n_poly):
+        p += coeff[i] * x**i
+    for i in range(n_trig):
+        p += coeff[n_poly + i] * sp.sin((i + 1) * sp.pi * x)
+        p += coeff[n_poly + n_trig + i] * sp.cos((i + 1) * sp.pi * x)
+
+    return sp.simplify(p), coeff
+            \end{lstlisting}
+
+            My initial guess:
+            \begin{figure}[H]
+                  \centering
+                  \includegraphics[width = .6\linewidth]{figs/Q2_guess.png}
+                  \caption{$f(x) = 1.25 x - 0.75 + 0.625 \sin(5\pi x)$}
+            \end{figure}
+            The Method of Normal Equations:
+            \begin{figure}[H]
+                  \centering
+                  \includegraphics[width = .6\linewidth]{figs/Q2_fit.png}
+                  \caption{$f(x) \approx x - 0.7 + 0.6 \sin(5\pi x)$}
+            \end{figure}
+
+            Accurate result from the method of normal equations:
+            $$
+                  f(x) \approx 0.999999980668295 x + 0.600000000000149 \sin(5\pi x) - 0.699999999335618
+            $$
+
             \clearpage
       \item The Chebyshev polynomials of the first kind, $T_n(x)$, are defined indirectly on [-1, 1] by:
             \begin{align*}
