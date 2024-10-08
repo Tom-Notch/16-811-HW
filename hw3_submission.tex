@@ -36,152 +36,456 @@
 \title{\Large Assignment 3 --- Math Fundamentals for Robotics 16-811, Fall 2024}
 
 \author{
-    \IEEEauthorblockN{Mukai Yu}
-    \IEEEauthorblockA{\textit{MSR, CMU} \\
-        Pittsburgh, PA\\
-        \href{mailto:mukaiy@andrew.cmu.edu}{mukaiy@andrew.cmu.edu}}
+      \IEEEauthorblockN{Mukai Yu}
+      \IEEEauthorblockA{\textit{MSR, CMU} \\
+            Pittsburgh, PA\\
+            \href{mailto:mukaiy@andrew.cmu.edu}{mukaiy@andrew.cmu.edu}}
 }
 
 \maketitle
 
 \begin{enumerate}[label=\arabic{enumi}.]
-    \item Consider the function $f (x) = sin x - 0.5$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
-          \begin{enumerate}
-              \item What is the Taylor series expansion for $f (x)$ around $x = 0$ ?
-              \item Graph $f (x)$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
-              \item Determine the best uniform approximation by a quadratic to the function $f (x)$ on the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
-                    What are the $L_{\infty}$ and $L_2$ errors for this approximation?
-              \item Determine the best least-squares approximation by a quadratic to the function $f (x)$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
-                    What are the $L_{\infty}$ and $L_2$ errors for this approximation?
-          \end{enumerate}
-          Terminology: Suppose an approximation has error function e(x), with x in interval $[a, b]$.
-          The $L_{\infty}$ error is $||e(x)||_{\infty} = \max_{a \leq x \leq b} |e(x)|$ and the $L_2$ error is $||e(x)||_2 = \sqrt{\int_a^b |e(x)|^2 dx}$.
+      \item Consider the function $f (x) = sin x - 0.5$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
+            \begin{enumerate}
+                  \item What is the Taylor series expansion for $f (x)$ around $x = 0$ ?
 
-          For your code submission, submit any code you used.
+                        \textbf{Solution:}
+                        \begin{align*}
+                              F(x) & = -0.5 + \sum_{k = 0}^\infty \frac{(-1)^k}{(2k + 1)!} x^{2k + 1}               \\
+                                   & \approx -0.5 + x - \frac{x^3}{6} + \frac{x^5}{120} - \frac{x^7}{5040} + \cdots
+                        \end{align*}
+                  \item Graph $f (x)$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
 
-          In your pdf, please show all your hand derivations and code results, and replicate any code you would like the TAs to see.
+                        \textbf{Solution:}
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=0.5\linewidth]{figs/Q1.png}
+                              \caption{Graph of $f(x) = sin (x) - 0.5$}
+                        \end{figure}
+                  \item Determine the best uniform approximation by a quadratic to the function $f (x)$ on the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
+                        What are the $L_{\infty}$ and $L_2$ errors for this approximation?
 
-    \item Suppose very accurate values of some function $f (x)$ are given at the points $0 = x_0, x_1, \cdots , x_100 = 1$, with the ${x_i}$ uniformly distributed over the interval [0, 1].
+                        \textbf{Solution:}
 
-          (So $x_i = \frac{i}{100}, i = 0, \cdots , 100$.)
+                        $n = 2$ so we need $n + 2 = 4$ points to determine the coefficients of the quadratic.
+                        Let them be $\{x_0, x_1, x_2, x_3\}$, and let the quadratic function be $p_2(x) = a x^2 + b x + c$.
 
-          The values $\{f (x_i)\}$ are given in the file 'problem2.txt' in sequential order
+                        $f^{(n + 1)}(x) = f^{(3)}(x) = - cos(x)$ which doesn't change sign in $[-\frac{\pi}{2}, \frac{\pi}{2}]$, so by the theorem taught in class we know that:
+                        \begin{align*}
+                               & \begin{cases}
+                                    x_0 = -\frac{\pi}{2} \\
+                                    x_3 = \frac{\pi}{2}  \\
+                                    e(x_0) = - e(x_1) = e(x_2) = - e(x_3) = E
+                              \end{cases} \\
+                               & +                         \\
+                               & \begin{cases}
+                                    e(x_0) = f(x_0) - p_2(x_0) = f(-\frac{\pi}{2}) - p_2(-\frac{pi}{2}) & = -1.5 - \frac{\pi^2}{4}a + \frac{\pi}{2}b - c \\
+                                    e(x_1) = f(x_1) - p_2(x_1)                                          & = sin(x_1) - 0.5 - a x_1^2 - b x_1 - c         \\
+                                    e(x_2) = f(x_2) - p_2(x_2)                                          & = sin(x_2) - 0.5 - a x_2^2 - b x_2 - c         \\
+                                    e(x_3) = f(x_3) - p_2(x_3) = f(\frac{\pi}{2}) - p_2(\frac{\pi}{2})  & = 0.5 - \frac{\pi^2}{4}a - \frac{\pi}{2}b - c
+                              \end{cases} \\
+                               & +                         \\
+                               & \begin{cases}
+                                    e'(x_1) & = f'(x_1) - p_2'(x_1) = cos(x_1) - 2 a x_1 - b = 0 \\
+                                    e'(x_2) & = f'(x_2) - p_2'(x_2) = cos(x_2) - 2 a x_2 - b = 0
+                              \end{cases} \\
+                               & \Downarrow                \\
+                               & \begin{cases}
+                                    c = -\frac{\pi^2}{4}a - 1 \\
+                                    b = \frac{2E - 2}{\pi}
+                              \end{cases}
+                        \end{align*}
+                        Now we see that the solution is not trivial, so we resort to numerical method \href{https://youtu.be/j29rVHCpRUY?si=eV1INsW6upgQ4lG5}{Remez Exchange Algorithm} to solve for the coefficients.
+                        \begin{lstlisting}[language=Python]
+def remez_exchange(
+f, n: int, interval: list, max_num_iteration: int = 100, tolerance: float = 1e-5
+):
+      """Remez Exchange Algorithm
 
-          (so, for example, $f (0.27) = f (x_{27}) = -0.964603914513021$).
+      Args:
+            f (_type_): univariate function
+            n (int): polynomial degree
+            interval (list): interval for uniform approximate
+            max_num_iteration (int): max number of iteration
+            tolerance (float): tolerance of point change between updates
+      """
 
-          Use the method of normal equations discussed in class, to find a description of $f (x)$ as the sum of a very few polynomials and cosines and sines.
-          (You may be able to guess the answer since the function is fairly simple, but please also use the method of normal equations.)
+      assert len(interval) == 2, "Interval must be a list of 2 elements"
 
-          For code, submit any code you used.
-          In your pdf, replicate any code you would like the TAs to see, show your results and explain how you obtained them.
-          If your search for a solution first considered some incorrect solutions, mention those and say how they informed your search for the correct solution.
+      # we need n + 2 points to construct a polynomial of degree n, uniform initialization
+      xi = np.linspace(interval[0], interval[1], n + 2)
 
-              [Hint: Try to express $f (x)$ as a linear combination of the functions, $1, x, x^2, \cdots , cos(\pi x), sin(\pi x), cos(2\pi x), sin(2\pi x), \cdots$.
-                  Use the method of normal equations.
-                  That method will not be enough by itself, since the underlying functions are redundant (more than a basis).
-                  However, that method is useful as a subroutine in a search.
-                  Try to find a very simple description of the function $f (x)$ by determining which coefficients in your sum may be
-                  set to zero.
-                  There may be multiple candidate answers; find one with the fewest nonzero coefficients.
-                  Graphing the function may be helpful in your search.
-                  You should need at most 3 nonzero coefficients when writing f (x) as a sum of the functions $1, x, x^2, \cdots , cos(\pi x), sin(\pi x), cos(2\pi x), sin(2\pi x), \cdots$.]
+      # define x
+      x = sp.symbols("x", real=True)
 
-    \item The Chebyshev polynomials of the first kind, $T_n(x)$, are defined indirectly on [-1, 1] by:
-          \begin{align*}
-              T_n(cos \theta) = cos(n \theta), \text{for } n \geq 0
-          \end{align*}
-          Expanding cosine, one finds the recurrence relation $T_{n+1}(x) = 2xT_n(x)-T_{n-1}(x)$, for $n > 0$.
-          \begin{enumerate}
-              \item Derive $T_4$ and $T_5$. (As always, please show your handwritten work.)
-              \item Without actually computing or working out any integrals, prove that $T_4(x)$ and $T_5(x)$ are orthogonal polynomials relative to the inner product
-                    $$
-                        < g, h > = \int_{-1}^{1} (1 - x^2)^{-\frac{1}{2}}g(x)h(x)dx.
-                    $$
-                    [Hint: Look carefully at the inner product and use a property of the polynomials.]
-              \item Recall that when we have an inner product on a vector space, we may define the length of vector v by $||v|| = \sqrt{< v, v >}$.
+      # numerical function f
+      f_numerical = sp.lambdify(x, f, "numpy")
 
-                    Here, we may view functions as vectors with an inner product defined by an integral
-                    as above.
-                    Then the length of $T_n(x)$ is the number $\sqrt{< v, v >}$.
+      # determine if f^(n + 1) does not change sign in the interval
+      f_n_plus_1 = sp.diff(f, x, n + 1)
+      roots = find_all_roots(sp.lambdify(x, f_n_plus_1, "numpy"), interval)
 
-                    It turns out that all $T_n(x)$, with $n > 0$, have the same length.
+      if len(roots) == 0:
+            print("f^(n + 1) does not change sign in the interval")
+            xi[0] = interval[0]
+            xi[-1] = interval[1]
 
-                    Prove this fact by hand-computing the length of $T_n(x)$, that is, by working out the relevant integral (leave n symbolic, assume $n > 0$).
+      # # some turbulence in the initial points
+      # xi[1] = -1.0
 
-                    (Hint: You will likely find it useful to make the substitution $x = cos \theta$ in the integral for $< T_n, T_n >$. Don't forget to change the interval of integration as well.)
-              \item Finally, show that $< T_i, T_j > = 0$ for all i and j such that $i \geq 0, j \geq 0$, and $i \neq j$.
+      for iter in range(max_num_iteration):
+            print(f"\nIteration {iter}\n")
 
-                    (There are different ways to prove this, e.g., by working out an integral explicitly or by combining known facts from above and lecture.)
-          \end{enumerate}
-          No code is expected or needed for any part of this problem.
+            # construct linear system
+            A = np.ones((n + 2, n + 2))
+            for degree in range(n + 1):
+                  A[:, degree] = xi**degree
+            A[:, -1] = (-1) ** np.arange(n + 2)
 
-          In your pdf, please show all your derivations, proofs, and handwritten work.
+            b = f_numerical(xi).reshape(-1, 1)
 
-    \item After weeks of work you have finally completed construction of a gecko robot.
-          It is a quadruped robot with suctioning feet that allow it to walk on walls.
-          It is also equipped with a Kinect-like sensor, providing a 3D point cloud observation of the world.
-          You want to use these point clouds to reason about the environment and aid in navigation.
-          \begin{enumerate}
-              \item You boot up the robot and place it on a table, taking an initial observation.
-                    The observation is saved in the provided clear table.txt, and lists (x, y, z) locations in the following format:
-                    \begin{table}[H]
-                        \centering
-                        \begin{tabular}{ccc}
-                            $x_1$ & $y_1$    & $z_1$ \\
-                                  & $\cdots$ &       \\
-                            $x_n$ & $y_n$    & $z_n$
-                        \end{tabular}
-                    \end{table}
-                    Points are in units of meters and the positive x-direction is right, positive y-direction is down, and positive z-direction is forward.
-                    Find the least-squares approximation plane that fits the data.
-                    Visualize your fitted plane along with the data.
-                    What is the average distance of a point in the data set to the fitted plane?
+            print(f"xi: {xi}")
+            print(f"A: {A}")
+            print(f"b: {b}")
 
-                    \textbf{Comment:} The phrase “least-squares” is ambiguous. Below are descriptions of two possibilities that might occur to you.
-                    Please use Linear Regression.
-                    That approach is similar to our discussion of the normal equations in lecture.
+            # solve linear system
+            solution = np.linalg.solve(A, b).flatten()
 
-                    \textbf{Orthogonal-Distance Regression:} In this approach, one computes the SVD decomposition of the $n \times 3$ matrix whose rows are the data points translated so their centroid is at the origin.
-                    It turns out that the third column of V is normal to a plane that minimizes the sum of squared orthogonal distances between the translated points and the plane.
-                    (This is a nice result to know.)
+            print(f"solution: {solution}")
 
-                    \textbf{Linear Regression:} This regression is based on the idea that, for perfectly planar data, all the points would satisfy a plane equation of the form $ax + by + cz + d = 0$.
-                    So one has a natural error $\sum_i (axi + byi + czi + d)^2$, with i indexing the data points.
-                    One chooses the coefficients {a, b, c, d} so as to minimize this error.
-                    In order to avoid degeneracies, one requires that not all of {a, b, c, d} be 0.
+            poly_coeff = solution[:-1]
+            error = np.abs(solution[-1])
 
-                    \textbf{Please use this approach.}
+            # construct polynomial function with sympy
+            poly = 0
+            for degree in range(n + 1):
+                  poly += poly_coeff[degree] * x**degree
 
-                    (Additional comments: (i) One convenient approach is to set one of the coefficients {a, b, c, d} to be 1 or -1 while letting the others vary in order to compute the best plane.
-                    (ii) Observe that $|ax_i + by_i + cz_i + d|$ is related to but not necessarily exactly the distance of the ith data point from the plane described by {a, b, c, d}.)
-              \item Interested in your gecko robot, your cat jumps up on the table.
-                    You take a second observation, saved as the provided cluttered table.txt.
-                    Using the same method as above, find the least-squares fit to the new data.
-                    How does it look? Why?
-              \item Can you suggest a way to still find a fit to the plane of the table regardless of clutter?
-                    Verify your idea by writing a program that can successfully find the dominant plane in a list of points regardless of outliers.
-                        [Hint: You may assume that the number of points in the plane is much larger than the number of points not in the plane.]
-                    Visualize cluttered table.txt with your new plane.
-              \item Encouraged by your results when testing on a table, you move your geckobot into the hallway and take an observation saved as the provided clean hallway.txt.
-                    Describe an extension to your solution to part (c) that finds the four dominant planes shown in the scene, then implement it and visualize the data and the four planes.
+            print("Polynomial function:")
+            sp.pprint(poly)
 
-                    You may assume that there are roughly the same amount of points in each plane.
-              \item You decide it is time to test your gecko robot's suction feet and move it to a different hallway.
-                    The feet are strong enough to ignore the force of gravity, allowing the robot to walk on the floor, walls, or ceiling.
-                    However, the locomotion of the legs works best on smooth surfaces with few obstacles.
-                    Using your solution from part (d), describe how you can mathematically characterize the smoothness of each surface.
-                    Load the provided scan cluttered hallway.txt, find and plot the four wall planes, describe which surface is safest for your robot to traverse, and provide the smoothness scores from your mathematical characterization.
+            # find the maximum error
+            error_func = f - poly
+            error_func_numerical = sp.lambdify(x, error_func, "numpy")
+            max_error_abs, max_point = find_max(error_func, interval)
+            print(f"max error: {max_error_abs}")
+            print(f"max point: {max_point}")
 
-                    Note that you may no longer assume that there are roughly the same amount of points in each plane.
-          \end{enumerate}
-          Parts (c), (d), and (e) intentionally leave room for some creativity and design.
-          There may be several good approaches.
+            # filter out the points with the same sign as the maximum error
+            xi_new = xi.copy()
+            xi_same_sign = xi_new[
+                  np.where(
+                  np.sign(error_func_numerical(xi_new))
+                  == np.sign(error_func_numerical(max_point))
+                  )
+            ]
 
-          Please submit code for all parts (a), (b), (c), (d), (e) of this problem.
-          In your pdf, explain what you did, how to run your code, and what results you obtained.
-          Describe any design decisions you made.
-          Include as well in your pdf any images you used to visualize data, and explain their meanings.
-          Finally, replicate in your pdf any code you would like the TAs to see.
+            # find the closest point to the maximum error point and replace it with the maximum error point
+            closest_point = xi_same_sign[np.argmin(np.abs(xi_same_sign - max_point))]
+            xi_new[np.where(xi_new == closest_point)] = max_point
+
+            print(f"xi_new: {xi_new}")
+
+            # if the error changing is less than tolerance, break the loop
+            if np.abs(np.abs(error) - max_error_abs) < tolerance:
+                  print(f"Converged after {iter} iterations")
+                  break
+
+            xi = np.sort(xi_new)
+
+      if iter == max_num_iteration - 1:
+            print(f"Did not converge after {max_num_iteration} iterations")
+
+      return poly, poly_coeff, max_error_abs
+                        \end{lstlisting}
+                        \begin{figure}[H]
+                              \centering
+                              \begin{subfigure}{0.49\linewidth}
+                                    \centering
+                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_1.png}
+                                    \caption{$n = 1$}
+                              \end{subfigure}
+                              \begin{subfigure}{0.49\linewidth}
+                                    \centering
+                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_2.png}
+                                    \caption{$n = 2$}
+                              \end{subfigure} \\
+                              \begin{subfigure}{0.49\linewidth}
+                                    \centering
+                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_3.png}
+                                    \caption{$n = 3$, error change does not converge to $< 10^{-5}$ in 1000 iterations}
+                              \end{subfigure}
+                              \begin{subfigure}{0.49\linewidth}
+                                    \centering
+                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_9.png}
+                                    \caption{$n = 9$}
+                              \end{subfigure}
+                              \caption{Best Uniform Approximation using the Remez Exchange Algorithm}
+                        \end{figure}
+
+                        Well, I guess odd function approximation can get good results.
+
+                        For $n = 1$:
+                        \begin{align*}
+                              \begin{cases}
+                                    p_1(x)   & \approx 0.72460996019333 x - 0.5 \\
+                                    L_\infty & \approx 0.13821791244547676      \\
+                                    L_2      & \approx 0.170396813894351
+                              \end{cases}
+                        \end{align*}
+
+                        For $n = 2$:
+                        \begin{align*}
+                              \begin{cases}
+                                    p_2(x)   & \approx - 0.500004924940155 + 0.724609736054229 x + 1.9960030637173 \times 10^{-6} x^2 \approx 0.724609736054229 x - 0.5 \\
+                                    L_\infty & \approx 0.13822185392370312                                                                                              \\
+                                    L_2      & \approx 0.170396982005513
+                              \end{cases}
+                        \end{align*}
+
+                        For $n = 3$:
+
+                        Its error change does not converge to $< 10^{-5}$ in 1000 iterations
+                        \begin{align*}
+                              \begin{cases}
+                                    p_3(x)   & \approx - 0.5000619896739 + 0.985440080596674 x + 0.000139910675817895 x^2 + 0.142443200483762 x^3 \\
+                                    L_\infty & \approx 0.004793777898904783                                                                       \\
+                                    L_2      & \approx 0.00568482890288639
+                              \end{cases}
+                        \end{align*}
+                  \item Determine the best least-squares approximation by a quadratic to the function $f (x)$ over the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
+                        What are the $L_{\infty}$ and $L_2$ errors for this approximation?
+
+                        \textbf{Solution:}
+
+                        Using Legendre polynomials as basis functions, we can solve for the coefficients of the quadratic.
+
+                        Legendre polynomials modified for interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$ has the following dot product definition:
+
+                        $$
+                              <f, g> = \int_{-\frac{\pi}{2}}^{\frac{\pi}{2}} f(x) g(x) dx
+                        $$
+                        Then with the first 2 Legendre polynomials:
+                        \begin{align*}
+                              \begin{cases}
+                                    P_0(x) & = 1 \\
+                                    P_1(x) & = x
+                              \end{cases}
+                        \end{align*}
+                        We can derive more Legendre polynomials using the following recurrence relation:
+                        $$
+                              P_{n + 1}(x) = \left[ x - \frac{<x P_n(x), P_n(x)>}{<P_n(x), P_n(x)>}\right] P_n(x) - \frac{<P_n(x), P_n(x)>}{<P_{n - 1}(x), P_{n - 1}(x)>} P_{n - 1}(x), n = 1, 2, \cdots
+                        $$
+                        More Legendre polynomials:
+                        \begin{align*}
+                              \begin{cases}
+                                    P_2(x) & = x^2 - \frac{\pi^2}{12}                                                       \\
+                                    P_3(x) & = x^3 - \frac{3\pi^2}{20} x                                                    \\
+                                    P_4(x) & = x^4 - \frac{3\pi^2}{14} x^2 + \frac{3\pi^4}{560}                             \\
+                                    P_5(x) & = x^5 - \frac{5\pi^2}{18} x^3 + \frac{5\pi^4}{336} x                           \\
+                                    P_6(x) & = x^6 - \frac{15\pi^2}{44} x^4 + \frac{5\pi^4}{176} x^2 - \frac{5\pi^6}{14784}
+                              \end{cases}
+                        \end{align*}
+                        Now after projecting $f(x)$ onto the first 3 Legendre polynomials for quadratic least square approximation, we can solve for the coefficients of the quadratic.
+                        \begin{align*}
+                              f(x)     & \approx -0.5 P_0(x) + \frac{24}{\pi^3} P_1(x) + 0 P_2(x) \\
+                                       & = \frac{24}{\pi^3} x - 0.5                               \\
+                              L_\infty & \approx 0.2158542037080533                               \\
+                              L_2      & \approx 0.15074041926875908
+                        \end{align*}
+                        \begin{lstlisting}[language=Python]
+def least_square_approximation(f, n: int, interval: list):
+    """Least square approximation
+
+    Args:
+        f (_type_): univariate function
+        n (int): polynomial degree
+        interval (list): interval for uniform approximate
+
+    Returns:
+        the polynomial
+    """
+
+    x = sp.symbols("x", real=True)
+
+    # construct the legendre polynomials
+    legendre_polynomials = [legendre_polynomial(i, interval) for i in range(n + 1)]
+
+    print(f"Legendre polynomials: {legendre_polynomials}")
+
+    projection_coefficients = [
+        legendre_dot(f, P, interval) / legendre_dot(P, P, interval)
+        for P in legendre_polynomials
+    ]
+
+    print(f"Projection coefficients: {projection_coefficients}")
+
+    poly = 0
+    for coefficient, P in zip(projection_coefficients, legendre_polynomials):
+        poly += coefficient * P
+
+    return poly
+                        \end{lstlisting}
+                        \begin{figure}[H]
+                              \centering
+                              \begin{subfigure}{0.49\linewidth}
+                                    \centering
+                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_1.png}
+                                    \caption{$n = 1$}
+                              \end{subfigure}
+                              \begin{subfigure}{0.49\linewidth}
+                                    \centering
+                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_2.png}
+                                    \caption{$n = 2$}
+                              \end{subfigure} \\
+                              \begin{subfigure}{0.49\linewidth}
+                                    \centering
+                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_3.png}
+                                    \caption{$n = 3$}
+                              \end{subfigure}
+                              \begin{subfigure}{0.49\linewidth}
+                                    \centering
+                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_9.png}
+                                    \caption{$n = 9$, complex error occurs here so they look close}
+                              \end{subfigure}
+                              \caption{Least Square Approximation using Legendre Polynomials}
+                        \end{figure}
+            \end{enumerate}
+            Terminology: Suppose an approximation has error function e(x), with x in interval $[a, b]$.
+            The $L_{\infty}$ error is $||e(x)||_{\infty} = \max_{a \leq x \leq b} |e(x)|$ and the $L_2$ error is $||e(x)||_2 = \sqrt{\int_a^b |e(x)|^2 dx}$.
+
+            For your code submission, submit any code you used.
+
+            In your pdf, please show all your hand derivations and code results, and replicate any code you would like the TAs to see.
+
+            \clearpage
+      \item Suppose very accurate values of some function $f (x)$ are given at the points $0 = x_0, x_1, \cdots , x_{100} = 1$, with the ${x_i}$ uniformly distributed over the interval [0, 1].
+
+            (So $x_i = \frac{i}{100}, i = 0, \cdots , 100$.)
+
+            The values $\{f (x_i)\}$ are given in the file 'problem2.txt' in sequential order
+
+            (so, for example, $f (0.27) = f (x_{27}) = -0.964603914513021$).
+
+            Use the method of normal equations discussed in class, to find a description of $f (x)$ as the sum of a very few polynomials and cosines and sines.
+            (You may be able to guess the answer since the function is fairly simple, but please also use the method of normal equations.)
+
+            For code, submit any code you used.
+            In your pdf, replicate any code you would like the TAs to see, show your results and explain how you obtained them.
+            If your search for a solution first considered some incorrect solutions, mention those and say how they informed your search for the correct solution.
+
+                  [Hint: Try to express $f (x)$ as a linear combination of the functions, $1, x, x^2, \cdots , cos(\pi x), sin(\pi x), cos(2\pi x), sin(2\pi x), \cdots$.
+                        Use the method of normal equations.
+                        That method will not be enough by itself, since the underlying functions are redundant (more than a basis).
+                        However, that method is useful as a subroutine in a search.
+                        Try to find a very simple description of the function $f (x)$ by determining which coefficients in your sum may be
+                        set to zero.
+                        There may be multiple candidate answers; find one with the fewest nonzero coefficients.
+                        Graphing the function may be helpful in your search.
+                        You should need at most 3 nonzero coefficients when writing f (x) as a sum of the functions $1, x, x^2, \cdots , cos(\pi x), sin(\pi x), cos(2\pi x), sin(2\pi x), \cdots$.]
+
+            \clearpage
+      \item The Chebyshev polynomials of the first kind, $T_n(x)$, are defined indirectly on [-1, 1] by:
+            \begin{align*}
+                  T_n(cos \theta) = cos(n \theta), \text{for } n \geq 0
+            \end{align*}
+            Expanding cosine, one finds the recurrence relation $T_{n+1}(x) = 2xT_n(x)-T_{n-1}(x)$, for $n > 0$.
+            \begin{enumerate}
+                  \item Derive $T_4$ and $T_5$. (As always, please show your handwritten work.)
+                  \item Without actually computing or working out any integrals, prove that $T_4(x)$ and $T_5(x)$ are orthogonal polynomials relative to the inner product
+                        $$
+                              < g, h > = \int_{-1}^{1} (1 - x^2)^{-\frac{1}{2}}g(x)h(x)dx.
+                        $$
+                        [Hint: Look carefully at the inner product and use a property of the polynomials.]
+                  \item Recall that when we have an inner product on a vector space, we may define the \textit{length of vector} v by $||v|| = \sqrt{< v, v >}$.
+
+                        Here, we may view functions as vectors with an inner product defined by an integral
+                        as above.
+                        Then the length of $T_n(x)$ is the number $\sqrt{< T_n, T_n >}$.
+
+                        It turns out that all $T_n(x)$, with $n > 0$, have the same length.
+
+                        Prove this fact by hand-computing the length of $T_n(x)$, that is, by working out the relevant integral (leave n symbolic, assume $n > 0$).
+
+                        (Hint: You will likely find it useful to make the substitution $x = cos \theta$ in the integral for $< T_n, T_n >$. Don't forget to change the interval of integration as well.)
+                  \item Finally, show that $< T_i, T_j > = 0$ for all i and j such that $i \geq 0, j \geq 0$, and $i \neq j$.
+
+                        (There are different ways to prove this, e.g., by working out an integral explicitly or by combining known facts from above and lecture.)
+            \end{enumerate}
+            No code is expected or needed for any part of this problem.
+
+            In your pdf, please show all your derivations, proofs, and handwritten work.
+
+            \textbf{Solution:}
+
+
+
+            \clearpage
+      \item After weeks of work you have finally completed construction of a gecko robot.
+            It is a quadruped robot with suctioning feet that allow it to walk on walls.
+            It is also equipped with a Kinect-like sensor, providing a 3D point cloud observation of the world.
+            You want to use these point clouds to reason about the environment and aid in navigation.
+            \begin{enumerate}
+                  \item You boot up the robot and place it on a table, taking an initial observation.
+                        The observation is saved in the provided clear\_table.txt, and lists (x, y, z) locations in the following format:
+                        \begin{table}[H]
+                              \centering
+                              \begin{tabular}{ccc}
+                                    $x_1$ & $y_1$    & $z_1$ \\
+                                          & $\vdots$ &       \\
+                                    $x_n$ & $y_n$    & $z_n$
+                              \end{tabular}
+                        \end{table}
+                        Points are in units of meters and the positive x-direction is right, positive y-direction is down, and positive z-direction is forward.
+                        Find the least-squares approximation plane that fits the data.
+                        Visualize your fitted plane along with the data.
+                        What is the average distance of a point in the data set to the fitted plane?
+
+                        \textbf{Comment:} The phrase “least-squares” is ambiguous. Below are descriptions of two possibilities that might occur to you.
+                        \textbf{Please use Linear Regression.}
+                        That approach is similar to our discussion of the normal equations in lecture.
+
+                        \textbf{Orthogonal-Distance Regression:} In this approach, one computes the SVD decomposition of the $n \times 3$ matrix whose rows are the data points translated so their centroid is at the origin.
+                        It turns out that the third column of V is normal to a plane that minimizes the sum of squared orthogonal distances between the translated points and the plane.
+                        (This is a nice result to know.)
+
+                        \textbf{Linear Regression:} This regression is based on the idea that, for perfectly planar data, all the points would satisfy a plane equation of the form $ax + by + cz + d = 0$.
+                        So one has a natural error $\sum_i (axi + byi + czi + d)^2$, with i indexing the data points.
+                        One chooses the coefficients $\{a, b, c, d\}$ so as to minimize this error.
+                        In order to avoid degeneracies, one requires that not all of $\{a, b, c, d\}$ be 0.
+
+                        \textbf{Please use this approach.}
+
+                        (Additional comments: (i) One convenient approach is to set one of the coefficients $\{a, b, c, d\}$ to be 1 or -1 while letting the others vary in order to compute the best plane.
+                        (ii) Observe that $|ax_i + by_i + cz_i + d|$ is related to but not necessarily exactly the distance of the ith data point from the plane described by $\{a, b, c, d\}$.)
+                  \item Interested in your gecko robot, your cat jumps up on the table.
+                        You take a second observation, saved as the provided cluttered table.txt.
+                        Using the same method as above, find the least-squares fit to the new data.
+                        How does it look? Why?
+                  \item Can you suggest a way to still find a fit to the plane of the table regardless of clutter?
+                        Verify your idea by writing a program that can successfully find the dominant plane in a list of points regardless of outliers.
+                              [Hint: You may assume that the number of points in the plane is much larger than the number of points not in the plane.]
+                        Visualize cluttered\_table.txt with your new plane.
+                  \item Encouraged by your results when testing on a table, you move your geckobot into the hallway and take an observation saved as the provided clean\_hallway.txt.
+                        Describe an extension to your solution to part (c) that finds the four dominant planes shown in the scene, then implement it and visualize the data and the four planes.
+
+                        You may assume that there are roughly the same amount of points in each plane.
+                  \item You decide it is time to test your gecko robot's suction feet and move it to a different hallway.
+                        The feet are strong enough to ignore the force of gravity, allowing the robot to walk on the floor, walls, or ceiling.
+                        However, the locomotion of the legs works best on smooth surfaces with few obstacles.
+                        Using your solution from part (d), describe how you can mathematically characterize the smoothness of each surface.
+                        Load the provided scan cluttered\_hallway.txt, find and plot the four wall planes, describe which surface is safest for your robot to traverse, and provide the smoothness scores from your mathematical characterization.
+
+                        Note that you may no longer assume that there are roughly the same amount of points in each plane.
+            \end{enumerate}
+            Parts (c), (d), and (e) intentionally leave room for some creativity and design.
+            There may be several good approaches.
+
+            Please submit code for all parts (a), (b), (c), (d), (e) of this problem.
+            In your pdf, explain what you did, how to run your code, and what results you obtained.
+            Describe any design decisions you made.
+            Include as well in your pdf any images you used to visualize data, and explain their meanings.
+            Finally, replicate in your pdf any code you would like the TAs to see.
 \end{enumerate}
 
 \end{document}
