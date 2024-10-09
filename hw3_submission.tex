@@ -561,7 +561,7 @@ def normal_equation_method(xi: np.array, yi: np.array, n_poly: int, n_trig: int,
                         (This is a nice result to know.)
 
                         \textbf{Linear Regression:} This regression is based on the idea that, for perfectly planar data, all the points would satisfy a plane equation of the form $ax + by + cz + d = 0$.
-                        So one has a natural error $\sum_i (axi + byi + czi + d)^2$, with i indexing the data points.
+                        So one has a natural error $\sum_i (ax_i + by_i + cz_i + d)^2$, with i indexing the data points.
                         One chooses the coefficients $\{a, b, c, d\}$ so as to minimize this error.
                         In order to avoid degeneracies, one requires that not all of $\{a, b, c, d\}$ be 0.
 
@@ -569,18 +569,280 @@ def normal_equation_method(xi: np.array, yi: np.array, n_poly: int, n_trig: int,
 
                         (Additional comments: (i) One convenient approach is to set one of the coefficients $\{a, b, c, d\}$ to be 1 or -1 while letting the others vary in order to compute the best plane.
                         (ii) Observe that $|ax_i + by_i + cz_i + d|$ is related to but not necessarily exactly the distance of the ith data point from the plane described by $\{a, b, c, d\}$.)
+
+                        \textbf{Solution:}
+
+                        We can set $d = 1$ first, then normalize the plane equation later.
+                        \begin{align*}
+                              ax + by + cz + 1 & = 0
+                        \end{align*}
+                        \begin{align*}
+                              E(a, b, c) & = \sum_{i = 1}^{n} (ax_i + by_i + cz_i + 1)^2 \\
+                                         & = (Ap + \mathbf{1})^T(Ap + \mathbf{1})        \\
+                        \end{align*}
+                        Where:
+                        \begin{align*}
+                              A          & = \begin{bmatrix}
+                                    x_1    & y_1    & z_1    \\
+                                    \vdots & \vdots & \vdots \\
+                                    x_n    & y_n    & z_n
+                              \end{bmatrix} \\
+                              p          & = \begin{bmatrix}
+                                    a \\
+                                    b \\
+                                    c
+                              \end{bmatrix} \\
+                              \mathbf{1} & = \begin{bmatrix}
+                                    1      \\
+                                    \vdots \\
+                                    1
+                              \end{bmatrix}
+                        \end{align*}
+                        Then:
+                        \begin{align*}
+                              \frac{\partial E}{\partial p} & = 2A^T(Ap + \mathbf{1}) = 0 \\
+                              \Downarrow                                                  \\
+                              A^T A p                       & = - A^T \mathbf{1}
+                        \end{align*}
+                        Solve for $p$ we get $p^* = [a^*, b^*, c^*]^T$, then the normalized plane equation is:
+                        \begin{align*}
+                              \frac{a^* x + b^* y + c^* z + 1}{\|p\|} & = 0
+                        \end{align*}
+                        \begin{lstlisting}[language=Python]
+def fit_plane(points: np.array) -> np.array:
+      """fit a plane with given points
+
+      Args:
+      points (np.array): in shape of (N, 3)
+
+      Returns:
+      np.array: plane coefficients in shape of (4,) and in format (a, b, c, d), normalized so ||(a, b, c)|| = 1
+      """
+      A = points.copy().reshape(-1, 3)
+
+      # solve for p
+      p = np.linalg.solve(A.T @ A, -A.T @ np.ones((A.shape[0], 1)))
+
+      # Normalize the coefficients so that [a, b, c] is a unit vector
+      coeff = np.append(p, 1) / np.linalg.norm(p)
+
+      return coeff
+                        \end{lstlisting}
+                        Plane Equation:
+                        \begin{align*}
+                              -0.0951113342629671 x - 0.994246831912656 y - 0.0492653156527438 z + 0.493702932302467 = 0
+                        \end{align*}
+                        Average distance = 0.002740250661757354
+                        \begin{figure}[H]
+                              \centering
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_clear_table_points.png}
+                                    \caption{clear\_table.txt}
+                              \end{subfigure}
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_clear_table_plane.png}
+                                    \caption{Fitted Plane, note that Z axis is auto-scaled}
+                              \end{subfigure}
+                              \caption{Fitted Plane on clear\_table.txt}
+                        \end{figure}
                   \item Interested in your gecko robot, your cat jumps up on the table.
                         You take a second observation, saved as the provided cluttered table.txt.
                         Using the same method as above, find the least-squares fit to the new data.
                         How does it look? Why?
+
+                        \textbf{Solution:}
+
+                        Plane equation:
+                        \begin{align*}
+                              -0.0975611845981769x - 0.973054533289032y - 0.208917903745619z + 0.774119219789838 = 0
+                        \end{align*}
+                        Average distance is 0.03741737808121337
+                        \begin{figure}[H]
+                              \centering
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_plane.png}
+                                    \caption{cluttered\_table.txt}
+                              \end{subfigure}
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_vis.png}
+                                    \caption{visualization in open3d}
+                              \end{subfigure}
+                              \caption{Fitted Plane on cluttered\_table.txt}
+                        \end{figure}
+                        Well, clearly not all the points are close to the ideal plane.
                   \item Can you suggest a way to still find a fit to the plane of the table regardless of clutter?
                         Verify your idea by writing a program that can successfully find the dominant plane in a list of points regardless of outliers.
                               [Hint: You may assume that the number of points in the plane is much larger than the number of points not in the plane.]
                         Visualize cluttered\_table.txt with your new plane.
+
+                        \textbf{Solution:}
+
+                        RANSAC
+                        \begin{lstlisting}[language=Python]
+def RANSAC_fit_plane(
+      points: np.array,
+      max_iter: int = 10000,
+      sample_ratio: float = 0.01,
+      distance_inlier_threshold: float = 0.01,
+) -> np.array:
+      """Fit a plane to a set of noisy 3D points using RANSAC.
+
+      Args:
+            points (np.array): points in shape (N, 3)
+            max_iter (int, optional): maximum iteration to perform random sampling. Defaults to 10000.
+            sample_ratio (float, optional): the amount of points to sample, sample_ratio * N. Defaults to 0.01. Will not be less than 10.
+            distance_inlier_threshold (float, optional): inlier points maximum average distance to their fitted plane. Defaults to 0.01.
+
+      Raises:
+            ValueError: No inlier points found.
+
+      Returns:
+            np.array: inlier points
+      """
+      NUM_POINTS = points.shape[0]
+      SAMPLE_SIZE = max(int(points.shape[0] * sample_ratio), 10)
+
+      inlier_index = np.array([], dtype=int)
+
+      for _ in range(max_iter):
+            # randomly sample SAMPLE_SIZE points index
+            random_index = np.random.permutation(np.arange(NUM_POINTS, dtype=int))[
+                  :SAMPLE_SIZE
+            ]
+
+            coeff = fit_plane(points[random_index])
+            distance = average_point_to_plane_distance(points[random_index], coeff)
+            if distance <= distance_inlier_threshold:
+                  inlier_index = np.append(inlier_index, random_index)
+                  inlier_index = np.sort(inlier_index)
+                  inlier_index = np.unique(inlier_index)
+
+      if inlier_index.size == 0:
+            raise ValueError("No inlier found.")
+
+      print(f"Inliers ratio: {inlier_index.size / NUM_POINTS}")
+      return points[inlier_index]
+                        \end{lstlisting}
+                        Plane Equation:
+                        \begin{align*}
+                              -0.10068718707874x - 0.992880691307245y - 0.063639792484089z + 0.518921115704315 = 0
+                        \end{align*}
+                        Average distance to all the points is 0.015754165478591993
+
+                        Average distance to table points is 0.005143845669654812
+                        \begin{figure}[H]
+                              \centering
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_plane_ransac.png}
+                                    \caption{cluttered\_table.txt RANSAC}
+                              \end{subfigure}
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_ransac_vis.png}
+                                    \caption{visualization in open3d}
+                              \end{subfigure}
+                              \caption{RANSAC fitted Plane on cluttered\_table.txt}
+                        \end{figure}
                   \item Encouraged by your results when testing on a table, you move your geckobot into the hallway and take an observation saved as the provided clean\_hallway.txt.
                         Describe an extension to your solution to part (c) that finds the four dominant planes shown in the scene, then implement it and visualize the data and the four planes.
 
                         You may assume that there are roughly the same amount of points in each plane.
+
+                        \textbf{Solution:}
+                        Extend the inlier criteria of RANSAC:
+                        \begin{lstlisting}[language=Python]
+def RANSAC_fit_plane_extended(
+      points: np.array,
+      num_planes: int,
+      max_iter: int = 10000,
+      sample_ratio: float = 0.001,
+      distance_inlier_threshold: float = 0.01,
+) -> np.array:
+      """extended RANSAC to fit multiple planes, inlier points must satisfy:
+      1. Itself is a plane with small average distance
+      2. Its fitted plane must be the same plane with existing inliers
+      3. The fitted plane's close to enough points (1/num_planes * 0.9)
+
+      Args:
+            points (np.array): points in shape (N, 3)
+            num_planes (int): number of planes to fit, assuming each plane has roughly the same number of inliers
+            max_iter (int, optional): maximum iteration to perform random sampling. Defaults to 10000.
+            sample_ratio (float, optional): the amount of points to sample, sample_ratio * N. Defaults to 0.0001. Will not be less than 5.
+            distance_inlier_threshold (float, optional): inlier points maximum average distance to their fitted plane. Defaults to 0.01.
+
+      Raises:
+            ValueError: No inlier points found.
+
+      Returns:
+            np.array: inlier points, might not be most points in its plane
+      """
+      NUM_POINTS = points.shape[0]
+      SAMPLE_SIZE = max(int(points.shape[0] * sample_ratio), 5)
+
+      print(f"Number of points: {NUM_POINTS}")
+      print(f"Sample size: {SAMPLE_SIZE}")
+
+      inlier_index = np.array([], dtype=int)
+
+      points_homo = np.hstack((points, np.ones((points.shape[0], 1))))
+
+      for iter in range(max_iter):
+            # randomly sample SAMPLE_SIZE points index
+            random_index = np.random.permutation(np.arange(NUM_POINTS, dtype=int))[
+                  :SAMPLE_SIZE
+            ]
+
+            extended_index = np.unique(np.append(inlier_index, random_index))
+
+            coeff = fit_plane(points[random_index])
+            distance = average_point_to_plane_distance(points[random_index], coeff)
+            extended_distance = average_point_to_plane_distance(
+                  points[extended_index], coeff
+            )
+
+            all_distances = np.abs(points_homo @ coeff)
+            num_inliers = np.where(all_distances <= distance_inlier_threshold)[0].size
+            inliers_ratio = num_inliers / NUM_POINTS
+
+            # print(f"inliers_ratio = {inliers_ratio}")
+
+            # Must satisfy: itself is a plane, it's the same plane with inliers, and it has enough inliers
+            if (
+                  distance <= distance_inlier_threshold
+                  and extended_distance <= distance_inlier_threshold
+                  and inliers_ratio > 1 / num_planes * 0.9
+            ):
+                  inlier_index = np.append(inlier_index, random_index)
+                  inlier_index = np.sort(inlier_index)
+                  inlier_index = np.unique(inlier_index)
+
+      if inlier_index.size == 0:
+            raise ValueError("No inlier found.")
+
+      print(f"Inliers ratio: {inlier_index.size / NUM_POINTS}")
+      return points[inlier_index]
+                        \end{lstlisting}
+                        Plane Equations:
+                        \begin{align*}
+                              \begin{cases}
+                                    0.170391902271525x - 0.984679478280239y - 0.0370529984488184z + 1.80802982578352 & = 0, \|e\| \approx 0.003144184418150686 \\
+                                    -0.96366746614888x - 0.175264115206761y + 0.201562656776964z + 0.218727644397049 & = 0, \|e\| \approx 0.00451623118244317  \\
+                                    -0.96403454687357x - 0.170863621367788y + 0.203575576450997z + 1.8162162422856   & = 0, \|e\| \approx 0.007681134237631346 \\
+                                    0.16936975663811x - 0.984804871586362y - 0.0383829445993377z + 0.211152350861021 & = 0, \|e\| \approx 0.003350451774268799
+                              \end{cases}
+                        \end{align*}
+                        \begin{figure}[H]
+                              \centering
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_clean_hallway_plane_ransac_1.png}
+                                    \caption{clean\_hallway.txt extended RANSAC $1^{st}$ plane}
+                              \end{subfigure}
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_clean_hallway_extended_ransac_vis_all.png}
+                                    \caption{visualization of all planes in open3d}
+                              \end{subfigure}
+                              \caption{extended RANSAC fitted plane on clean\_hallway.txt}
+                        \end{figure}
+                        More results available in the \textit{figs/} folder.
                   \item You decide it is time to test your gecko robot's suction feet and move it to a different hallway.
                         The feet are strong enough to ignore the force of gravity, allowing the robot to walk on the floor, walls, or ceiling.
                         However, the locomotion of the legs works best on smooth surfaces with few obstacles.
@@ -588,6 +850,161 @@ def normal_equation_method(xi: np.array, yi: np.array, n_poly: int, n_trig: int,
                         Load the provided scan cluttered\_hallway.txt, find and plot the four wall planes, describe which surface is safest for your robot to traverse, and provide the smoothness scores from your mathematical characterization.
 
                         Note that you may no longer assume that there are roughly the same amount of points in each plane.
+
+                        \textbf{Solution:}
+
+                        I characterize the smoothness of each surface by the variance of distance between all the points to the fitted plane, lower variance indicates higher smoothness.
+                        \begin{lstlisting}[language=Python]
+def voxel_downsample_point_cloud(points, voxel_size):
+    """
+    Downsamples the input point cloud using a voxel grid filter.
+
+    Args:
+        points (np.array): Input points in shape (N, 3).
+        voxel_size (float): The size of the voxel grid.
+
+    Returns:
+        np.array: Downsampled points in shape (M, 3).
+    """
+    # Create Open3D point cloud
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(points)
+
+    # Downsample
+    downsampled_pcd = pcd.voxel_down_sample(voxel_size)
+
+    # Extract NumPy array
+    downsampled_points = np.asarray(downsampled_pcd.points)
+
+    return downsampled_points
+                        \end{lstlisting}
+                        RANSAC is modified to consider inlier points only if their fitted plane is close to enough number of points (threshold is adaptive).
+                        \begin{lstlisting}[language=Python]
+def RANSAC_fit_multiple_planes(
+      points: np.array,
+      num_planes: int,
+      max_iter: int = 10000,
+      sample_size: int = 5,
+      distance_threshold: float = 0.01,
+      inlier_ratio: float = 0.9,
+):
+      """Fit multiple planes to a set of 3D points using RANSAC.
+
+      Args:
+            points (np.array): Points in shape (N, 3).
+            num_planes (int): Number of planes to fit.
+            max_iter (int, optional): Maximum iterations for RANSAC. Defaults to 10000.
+            sample_size (int, optional): number of points to sample for every RANSAC iteration. Defaults to 5.
+            distance_threshold (float, optional): Distance threshold for inliers. Defaults to 0.01.
+            min_inliers (int, optional): Minimum number of inliers to accept a plane. Adjust as needed.
+
+      Returns:
+      """
+      points = points.copy().reshape(-1, 3)
+      remaining_points = points.copy().reshape(-1, 3)
+
+      planes = []
+
+      for i in range(num_planes)[::-1]:
+            print(f"Fitting plane {i + 1}...")
+
+            min_inliers = int(remaining_points.shape[0] / (i + 1) * inlier_ratio)
+
+            inlier_indices = np.array([], dtype=int)
+            # Can no longer assume the same number of inliers for each plane
+            for _ in range(max_iter):
+                  # Randomly sample points
+                  sample_indices = np.random.permutation(
+                  np.arange(remaining_points.shape[0], dtype=int)
+                  )[:sample_size]
+                  extended_index = np.unique(np.append(inlier_indices, sample_indices))
+                  sample_points = remaining_points[sample_indices]
+
+                  # Fit a plane to the sample points
+                  plane_coefficients = fit_plane(sample_points)
+
+                  fit_distance = average_point_to_plane_distance(
+                  sample_points, plane_coefficients
+                  )
+                  inlier_distance = average_point_to_plane_distance(
+                  remaining_points[extended_index], plane_coefficients
+                  )
+
+                  all_distances = np.abs(
+                  remaining_points @ plane_coefficients[:3] + plane_coefficients[3]
+                  )
+                  num_inliers = np.where(all_distances <= distance_threshold)[0].size
+
+                  if (
+                  fit_distance <= distance_threshold
+                  and inlier_distance <= distance_threshold
+                  and num_inliers >= min_inliers
+                  ):
+                  inlier_indices = np.append(inlier_indices, sample_indices)
+                  inlier_indices = np.sort(inlier_indices)
+                  inlier_indices = np.unique(inlier_indices)
+
+            if inlier_indices.size > 0:
+                  print(f"Found {inlier_indices.size} inliers.")
+                  coeff = fit_plane(remaining_points[inlier_indices])
+
+                  # find all points that are close to this plane in points
+                  distance_all_points = np.abs(points @ coeff[:3] + coeff[3])
+                  point_close_to_this_plane = points[
+                  np.where(distance_all_points <= distance_threshold)
+                  ]
+                  distance_close_to_this_plane = distance_all_points[
+                  np.where(distance_all_points <= distance_threshold)
+                  ]
+                  print(f"Points close to this plane: {point_close_to_this_plane.shape[0]}")
+                  planes.append(
+                  {
+                        "coeff": fit_plane(point_close_to_this_plane),
+                        "mean_distance": distance_close_to_this_plane.mean(),
+                        "var_distance": distance_close_to_this_plane.var(),
+                        "var_distance_all": distance_all_points.var(),
+                        "points": point_close_to_this_plane,
+                        "num_points": point_close_to_this_plane.shape[0],
+                  }
+                  )
+
+                  # remove all points close to this plane from remaining points
+                  distance_remaining_points = np.abs(remaining_points @ coeff[:3] + coeff[3])
+                  remaining_points = remaining_points[
+                  np.where(distance_remaining_points > distance_threshold)
+                  ]
+
+                  print(f"Remaining points: {remaining_points.shape[0]}")
+
+      # Sort planes by number of points
+      planes = sorted(planes, key=lambda x: x["num_points"], reverse=True)
+
+      return planes
+                        \end{lstlisting}
+                        Some results:
+                        \begin{figure}[H]
+                              \centering
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_hallway_downsampled.png}
+                                    \caption{cluttered\_hallway.txt downsampled}
+                              \end{subfigure}
+                              \begin{subfigure}{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_hallway_planes.png}
+                                    \caption{cluttered\_hallway.txt RANSAC visualized with original point cloud}
+                              \end{subfigure}
+                              \caption{RANSAC fitted plane on cluttered\_hallway.txt}
+                        \end{figure}
+                        The algorithm turns to be very fragile to parameter changes, e.g., sample size, distance threshold.
+
+                        There could be better metric, e.g., project close points to the fitted plane and see if there are holes, to prevent fitting a densely scanned ring instead of a plane.
+
+                        Anyway, here are the 2 best plane in terms of smoothness and number of points:
+                        \begin{align*}
+                              \begin{cases}
+                                    0.0180113772483563x + 0.995495709171525y - 0.0930799834051354z + 0.534986213611912 & = 0, \|e\| \approx 0.0039050967482275882 \\
+                                    -0.0134299102483403x - 0.994749138160533y + 0.101458314787885z + 0.582350784438808 & = 0, \|e\| \approx 0.0035446492378242746
+                              \end{cases}
+                        \end{align*}
             \end{enumerate}
             Parts (c), (d), and (e) intentionally leave room for some creativity and design.
             There may be several good approaches.
