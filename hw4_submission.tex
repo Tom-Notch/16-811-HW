@@ -11,6 +11,9 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -59,6 +62,32 @@
                   \item By hand, obtain an exact analytic solution $y(x)$ to this differential equation.
 
                         (You may simply guess $y(x)$ and then show that it satisfies the differential equation.)
+
+                        \textbf{Solution:}
+
+                        We can always try Laplace transform but here's a simpler method:
+
+                        \begin{align*}
+                              3 y^2 y' = 3 y^2 \frac{dy}{dx} & = 1       \\
+                              3 y^2 dy                       & = dx      \\
+                              \int 3 y^2 dy                  & = \int dx \\
+                              y^3                            & = x + C   \\
+                        \end{align*}
+
+                        Plug in $y(1) = 1$:
+
+                        \begin{align*}
+                              1^3 & = 1 + C \\
+                              C   & = 0
+                        \end{align*}
+
+                        So the solution is $y(x) = x^{\frac{1}{3}}$.
+
+                        Verification:
+
+                        \begin{align*}
+                              3 y^2 y' & = 3 x^{\frac{2}{3}} \frac{1}{3} x^{-\frac{2}{3}} = 1
+                        \end{align*}
             \end{enumerate}
 
             In the next three parts you will solve the differential equation numerically.
@@ -91,6 +120,64 @@
                         \end{align*}
                         Once again, how accurate is your numerical solution?
             \end{enumerate}
+
+            \textbf{Solution:}
+
+            Combined Table:
+
+            \begin{table}[H]
+                  \centering
+                  \begin{tabular}{c c c | c c | c c | c c}
+                        \toprule
+                        \multirow{2}{*}{\textbf{n}} & \multirow{2}{*}{$x_i$} & \multirow{2}{*}{$\text{True } y(x_i)$} & \multicolumn{2}{c|}{\textbf{Euler's Method}} & \multicolumn{2}{c|}{\textbf{Runge-Kutta}} & \multicolumn{2}{c}{\textbf{Adams-Bashforth}}                                            \\
+                        \cmidrule{4-9}
+                                                    &                        &                                        & $y_i$                                        & $y(x_i) - y_i$                            & $y_i$                                        & $y(x_i) - y_i$ & $y_i$  & $y(x_i) - y_i$ \\
+                        \midrule
+                        0                           & 1.0                    & 1.0                                    & 1.0                                          & 0.0                                       & 1.0                                          & 0.0            & 1.0    & 0.0            \\
+                        1                           & 0.95                   & 0.9830                                 & 0.9833                                       & -0.0002                                   & 0.9830                                       & 2.3154e-10     & 0.9830 & -3.1326e-07    \\
+                        2                           & 0.9                    & 0.9654                                 & 0.9660                                       & -0.0006                                   & 0.9654                                       & 5.3542e-10     & 0.9654 & -7.3195e-07    \\
+                        3                           & 0.85                   & 0.9472                                 & 0.9482                                       & -0.0009                                   & 0.9472                                       & 9.3811e-10     & 0.9472 & -1.2671e-06    \\
+                        4                           & 0.8                    & 0.9283                                 & 0.9297                                       & -0.0013                                   & 0.9283                                       & 1.4780e-09     & 0.9283 & -1.9753e-06    \\
+                        5                           & 0.75                   & 0.9085                                 & 0.9104                                       & -0.0018                                   & 0.9085                                       & 2.2119e-09     & 0.9085 & -2.9209e-06    \\
+                        6                           & 0.7                    & 0.8879                                 & 0.8903                                       & -0.0024                                   & 0.8879                                       & 3.2260e-09     & 0.8879 & -4.2000e-06    \\
+                        7                           & 0.6499                 & 0.8662                                 & 0.8692                                       & -0.0030                                   & 0.8662                                       & 4.6544e-09     & 0.8662 & -5.9595e-06    \\
+                        8                           & 0.6                    & 0.8434                                 & 0.8472                                       & -0.0037                                   & 0.8434                                       & 6.7129e-09     & 0.8434 & -8.4267e-06    \\
+                        9                           & 0.55                   & 0.8193                                 & 0.8240                                       & -0.0046                                   & 0.8193                                       & 9.7604e-09     & 0.8193 & -1.1965e-05    \\
+                        10                          & 0.5                    & 0.7937                                 & 0.7994                                       & -0.0057                                   & 0.7937                                       & 1.4421e-08     & 0.7937 & -1.7181e-05    \\
+                        11                          & 0.4499                 & 0.7663                                 & 0.7733                                       & -0.0070                                   & 0.7663                                       & 2.1834e-08     & 0.7663 & -2.5118e-05    \\
+                        12                          & 0.3999                 & 0.7368                                 & 0.7455                                       & -0.0087                                   & 0.7368                                       & 3.4209e-08     & 0.7368 & -3.7679e-05    \\
+                        13                          & 0.35                   & 0.7047                                 & 0.7155                                       & -0.0108                                   & 0.7047                                       & 5.6160e-08     & 0.7047 & -5.8534e-05    \\
+                        14                          & 0.2999                 & 0.6694                                 & 0.6829                                       & -0.0135                                   & 0.6694                                       & 9.8257e-08     & 0.6695 & -9.5318e-05    \\
+                        15                          & 0.25                   & 0.6299                                 & 0.6472                                       & -0.0172                                   & 0.6299                                       & 1.8783e-07     & 0.6301 & -0.0001        \\
+                        16                          & 0.1999                 & 0.5848                                 & 0.6074                                       & -0.0226                                   & 0.5848                                       & 4.0811e-07     & 0.5851 & -0.0003        \\
+                        17                          & 0.1499                 & 0.5313                                 & 0.5623                                       & -0.0309                                   & 0.5313                                       & 1.0798e-06     & 0.5320 & -0.0006        \\
+                        18                          & 0.0999                 & 0.4641                                 & 0.5096                                       & -0.0454                                   & 0.4641                                       & 3.9945e-06     & 0.4659 & -0.0018        \\
+                        19                          & 0.0499                 & 0.3684                                 & 0.4454                                       & -0.0770                                   & 0.3683                                       & 2.8737e-05     & 0.3755 & -0.0071        \\
+                        20                          & 0                      & 0.0                                    & 0.3614                                       & -0.3614                                   & 0.1034                                       & -0.1034        & 0.2208 & -0.2208        \\
+                        \bottomrule
+                  \end{tabular}
+                  \caption{Comparison of Numerical Methods}
+                  \label{tab:comparison}
+            \end{table}
+
+            Solution Accuracy:
+            \begin{align}
+                  \begin{cases}
+                        \text{Euler's Method:}         & |e| \approx 0.3614 \\
+                        \text{Runge-Kutta Method:}     & |e| \approx 0.1034 \\
+                        \text{Adams-Bashforth Method:} & |e| \approx 0.2208
+                  \end{cases}
+            \end{align}
+
+            Looks like Adams-Bashforth is not always better than Runge-Kutta.
+
+            \begin{figure}[H]
+                  \centering
+                  \includegraphics[width=.5\linewidth]{figs/Q1.png}
+                  \caption{Comparison of Numerical Methods}
+                  \label{fig:comparison}
+            \end{figure}
+
             Please submit code for parts (b)-(d).
             Include in your pdf any relevant code snippets that you would like the TAs to see, along with your table and graph, plus your work for (a).
 
