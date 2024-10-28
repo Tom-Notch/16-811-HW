@@ -14,6 +14,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{minted}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -23,15 +24,28 @@
 
 \IEEEoverridecommandlockouts
 
+% Define a style for pseudocode
+\lstdefinelanguage{pseudocode}{
+  morekeywords={if, then, else, endif, while, do, end, for, each, in, return, function, let},
+  sensitive=false,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]",
+}
+
 \lstset{
-    language=MATLAB,             % Set language to MATLAB
-    basicstyle=\ttfamily\small,  % Set font to small and monospaced
-    keywordstyle=\color{blue},   % Color keywords
-    stringstyle=\color{green},   % Color strings
-    commentstyle=\color{gray},   % Color comments
-    showstringspaces=false,      % Do not display string spaces
-    frame=single,                % Add a frame around the code
-    breaklines=true              % Line breaks for long lines
+  language=pseudocode,
+  basicstyle=\ttfamily,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=5pt,
+  tabsize=2,
+  showstringspaces=false,
+  breaklines=true,
 }
 
 \setlist[enumerate,1]{label=\arabic{enumi}.}
@@ -370,12 +384,74 @@
                               \item “Purely quadratic” means conjugate gradient applied to functions of the form $f (x) = c + b^T x + \frac{1}{2} x^T Qx$, with Q a real symmetric positive definite matrix.
                               \item $g_k$ is the gradient of $f (x)$ evaluated at $x_k$, and $d_k$ is the descent direction along which the method moves from $x_k$.)
                         \end{itemize}
+
+                        \textbf{Solution:}
+
+                        Gradient and Hessian of $f(x)$:
+                        \begin{align*}
+                              \begin{cases}
+                                    \nabla f(x)            & = Qx + b \\
+                                    H_f(x) = \nabla^2 f(x) & = Q
+                              \end{cases}
+                        \end{align*}
+                        And we have:
+                        \begin{align*}
+                              g_k = \nabla f(x_k) = Qx_k + b
+                        \end{align*}
+                        Because it's steepest descent in each step, the descent direction $d_k$ at $x_k$ must be the negative gradient $-g_k$, so we have:
+                        \begin{align*}
+                              d_k = -g_k \Rightarrow d_k^T Q d_k = d_k^T Q (-g_k) = -d_k^T Q g_k
+                        \end{align*}
+                        Then by the update step of conjugate gradient method we have:
+                        \begin{align*}
+                              x_{k+1}  & = x_k + \alpha_k d_k                                               \\
+                              \alpha_k & = -\frac{g_k^T d_k}{d_k^T Q d_k} = \frac{g_k^T d_k}{d_k^T (Q g_k)}
+                        \end{align*}
+                        Thus we don't need to use $Q$ explicitly to obtain $x_{k+1}$.
                   \item Show that in the purely quadratic form $Qg_k$ can be computed by taking a unit step from $x_k$ in the direction of the negative gradient and then evaluating the gradient there.
                         Specifically, if $y_k = x_k - g_k$ and $p_k = \nabla f (y_k)$, then $Qg_k = g_k - p_k$.
+
+                        \textbf{Solution:}
+
+                        \begin{align*}
+                              p_k & = \nabla f(y_k) = Qy_k + b = Q(x_k - g_k) + b = Qx_k - Qg_k + b = g_k - Qg_k \Rightarrow Q g_k = g_k - p_k
+                        \end{align*}
                   \item Combine the results of parts (a) and (b) to derive a conjugate gradient method for general functions $f$ in the spirit of the algorithm presented in class, but which does not require knowledge of the Hessian of $f$ or a line search.
                         (In class we used line search to find minima of $f$ along particular directions.)
                         You may assume that the underlying ideas developed in (a) and (b) for purely quadratic functions carry over to general functions when you use the Conjugate Gradient Algorithm that appears on page 22 of the Optimization notes.
-                        Since that algorithm is based on the algorithm of page 17 in the notes, you will want to adapt the formulas for $\alpha k$ and $\beta k$ that appear on page 17.
+                        Since that algorithm is based on the algorithm of page 17 in the notes, you will want to adapt the formulas for $\alpha_k$ and $\beta_k$ that appear on page 17.
+
+                        \textbf{Solution:}
+
+                        Combine the results of parts (a) and (b) we can derive:
+                        \begin{align*}
+                              \alpha_k & = \frac{g_k^T d_k}{d_k^T (Q g_k)} = \frac{g_k^T d_k}{d_k^T (g_k - p_k)} = \frac{g_k^T d_k}{d_k^T g_k - d_k^T p_k} \\
+                              \beta_k  & = \frac{g_{k+1}^T (Q d_k)}{d_k^T (Q d_k)} = \frac{g_{k+1}^T (g_k - p_k)}{d_k^T (g_k - p_k)}
+                        \end{align*}
+
+                        Updated version of Conjugate Gradient Algorithm for pure quadratic function $f$ on page 17:
+                        \begin{enumerate}[label=\arabic*.]
+                              \item Let $d_0 = -g_0 = -b_0 - Q x_0$ for randomly initialized $x_0$.
+                              \item For $k = 0, \cdots, n - 1$ do:
+                              \item \begin{enumerate}[label=\alph*.]
+                                          \item $\alpha_k \leftarrow \frac{g_k^T d_k}{d_k^T g_k - d_k^T p_k}$, where $p_k = \nabla f(x_k - g_k)$.
+                                          \item $x_{k + 1} \leftarrow x_k + \alpha_k d_k$.
+                                          \item $\beta_k \leftarrow \frac{g_{k+1}^T (g_k - p_k)}{d_k^T (g_k - p_k)}$, where $g_{k+1} = \nabla f(x_{k + 1})$.
+                                          \item $d_{k + 1} \leftarrow -g_{k + 1} + \beta_k d_k$.
+                                    \end{enumerate}
+                              \item Return $x_n$.
+                        \end{enumerate}
+                        Updated version of Conjugate Gradient Algorithm on page 22 assuming the underlying ideas
+                        developed in (a) and (b) for purely quadratic functions carry over to general functions $f$:
+                        \begin{enumerate}[label=\arabic*.]
+                              \item Randomly initialize $x_0$, set $d_0 = -\nabla f(x_0)$.
+                              \item For $k = 0, \cdots, n - 1$ do:
+                              \item \begin{enumerate}[label=\alph*.]
+                                          \item Set $x_{k + 1} = x_k + \alpha_k d_k$, where $\alpha_k = \frac{g_k^T d_k}{d_k^T g_k - d_k^T p_k}$ and $p_k = \nabla f(x_k - g_k)$.
+                                          \item Set $d_{k + 1} = -\nabla f(x_{k + 1}) + \beta_k d_k$, where $\beta_k = \frac{|\nabla f(x_{k + 1})|^2}{|\nabla f(x_{k})|^2}$.
+                                    \end{enumerate}
+                              \item Return $x_n$.
+                        \end{enumerate}
             \end{enumerate}
             No code is needed or expected for this problem.
             Please answer all parts in the pdf.
