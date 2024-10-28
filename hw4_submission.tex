@@ -186,9 +186,144 @@
             \begin{enumerate}
                   \item Find all critical points of $f$ by sketching in the $(x, y)$-plane the iso-contours $\frac{\partial f}{\partial x} = 0$ and $\frac{\partial f}{\partial y} = 0$.
                         Then classify the critical points into local minima, local maxima, and saddle points by considering either nearby gradient directions or the Hessian of $f$.
+
+                        \textbf{Solution:}
+
+                        \begin{align*}
+                              \frac{\partial f}{\partial x} & = 3x^2 - 4x = 0 \Rightarrow x = 0, \frac{4}{3} \\
+                              \frac{\partial f}{\partial y} & = 3y^2 + 6y = 0 \Rightarrow y = 0, -2
+                        \end{align*}
+
+                        Plug into the original function we can get
+
+                        \begin{align*}
+                              \begin{cases}
+                                    f(0, y)           & = y^3 + 3y^2 - 8                                \\
+                                    f(\frac{4}{3}, y) & = \frac{64}{27} + y^3 - \frac{32}{9} + 3y^2 - 8 \\
+                                    f(x, 0)           & = x^3 - 2x^2 - 8                                \\
+                                    f(x, -2)          & = x^3 - 2x^2 - 4
+                              \end{cases}
+                        \end{align*}
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.75\linewidth]{figs/Q2.png}
+                              \caption{iso-contours of $f$}
+                              \label{fig:iso}
+                        \end{figure}
+                        The critical points are:
+                        \begin{align*}
+                              \begin{cases}
+                                    (0, 0)           \\
+                                    (0, -2)          \\
+                                    (\frac{4}{3}, 0) \\
+                                    (\frac{4}{3}, -2)
+                              \end{cases}
+                        \end{align*}
+                        Gradient vector and Hessian matrix of $f$:
+                        \begin{align*}
+                              \begin{cases}
+                                    \nabla f(x, y) = \begin{bmatrix}
+                                          \frac{\partial f}{\partial x} \\
+                                          \frac{\partial f}{\partial y}
+                                    \end{bmatrix} = \begin{bmatrix}
+                                          3x^2 - 4x \\
+                                          3y^2 + 6y
+                                    \end{bmatrix} \\
+                                    H_f(x, y) = \begin{bmatrix}
+                                          \frac{\partial^2 f}{\partial x^2}          & \frac{\partial^2 f}{\partial x \partial y} \\
+                                          \frac{\partial^2 f}{\partial y \partial x} & \frac{\partial^2 f}{\partial y^2}
+                                    \end{bmatrix} = \begin{bmatrix}
+                                          6x - 4 & 0      \\
+                                          0      & 6y + 6
+                                    \end{bmatrix}
+                              \end{cases}
+                        \end{align*}
+                        Hessian at each critical point:
+                        \begin{align*}
+                              \begin{cases}
+                                    H_f(0, 0)            & = \begin{bmatrix}
+                                          -4 & 0 \\
+                                          0  & 6
+                                    \end{bmatrix}, det(H_f(0, 0)) < 0 \Rightarrow H_f(0, 0) \text{ indefinite}                              \\
+                                    H_f(0, -2)           & = \begin{bmatrix}
+                                          -4 & 0  \\
+                                          0  & -6
+                                    \end{bmatrix}, det(H_f(0, -2)) > 0 \Rightarrow H_f(0, -2) \text{ negative definite}                     \\
+                                    H_f(\frac{4}{3}, 0)  & = \begin{bmatrix}
+                                          4 & 0 \\
+                                          0 & 6
+                                    \end{bmatrix}, det(H_f(\frac{4}{3}, 0)) > 0   \Rightarrow H_f(\frac{4}{3}, 0) \text{ positive definite} \\
+                                    H_f(\frac{4}{3}, -2) & = \begin{bmatrix}
+                                          4 & 0  \\
+                                          0 & -6
+                                    \end{bmatrix}, det(H_f(\frac{4}{3}, -2)) < 0 \Rightarrow H_f(\frac{4}{3}, -2) \text{ indefinite}
+                              \end{cases}
+                        \end{align*}
+                        So we can determine the type of critical points
+                        \begin{align*}
+                              \begin{cases}
+                                    (0, 0)            & \text{ saddle point}  \\
+                                    (0, -2)           & \text{ local maximum} \\
+                                    (\frac{4}{3}, 0)  & \text{ local minimum} \\
+                                    (\frac{4}{3}, -2) & \text{ saddle point}
+                              \end{cases}
+                        \end{align*}
+
                   \item By hand, show how steepest descent would behave starting from the point $(x, y) = (1, -1)$.
                         Use the version of steepest descent that moves to the nearest local minimum on the negative gradient line, as discussed in class.
                         How many such steepest descent steps are needed to converge to an overall local minimum of $f$?
+
+                        \textbf{Solution:}
+
+                        The gradient of $f$ at $(1, -1)$ is $\nabla f(1, -1) = \begin{bmatrix} -1 \\ -3 \end{bmatrix}$, so the direction is along the negative gradient vector $-\nabla f(1, -1) = \begin{bmatrix}1 \\ 3\end{bmatrix}$.
+
+                        So we can express the line as:
+                        \begin{align*}
+                              \begin{cases}
+                                    x = 1 + t \\
+                                    y = -1 + 3t
+                              \end{cases}
+                        \end{align*}
+                        And perform a line minimization by substituting $x = 1 + t$ and $y = -1 + 3t$ into $f(x, y)$:
+                        \begin{align*}
+                              f(t) & = (1 + t)^3 + (-1 + 3t)^3 - 2(1 + t)^2 + 3(-1 + 3t)^2 - 8
+                        \end{align*}
+                        We can then find the minimum of $f(t)$ by taking the derivative and setting it to zero:
+                        \begin{align*}
+                              \frac{df}{dt} & = 3(1 + t)^2 + 3(-1 + 3t)^2 \cdot 3 - 4(1 + t) + 6(-1 + 3t) \cdot 3 \\
+                                            & = (3 + 81) t^2 + (6 - 54 - 4 + 54)t + (3 + 9 - 4 - 18)              \\
+                                            & = 84 t^2 + 2 t - 10                                                 \\
+                                            & = 2(3t - 1)(14t + 5) = 0
+                        \end{align*}
+                        So the 2 roots are:
+                        \begin{align*}
+                              \begin{cases}
+                                    t_1 = \frac{1}{3} \\
+                                    t_2 = -\frac{5}{14}
+                              \end{cases}
+                        \end{align*}
+                        To determine which one is the minimum, we need to check the second derivative:
+                        \begin{align*}
+                              \frac{d^2}{dt^2}f(t) & = 168 t + 2
+                        \end{align*}
+                        Plug in the 2 roots we get:
+                        \begin{align*}
+                              \begin{cases}
+                                    \frac{d^2}{dt^2}f(\frac{1}{3})   & = 168 \cdot \frac{1}{3} + 2 = 60 > 0 \Rightarrow \text{local minimum}      \\
+                                    \frac{d^2}{dt^2}f(-\frac{5}{14}) & = 168 \cdot (-\frac{5}{14}) + 2 = -50 < 0 \Rightarrow \text{local maximum}
+                              \end{cases}
+                        \end{align*}
+                        Plug in the minimum point $t = \frac{1}{3}$ back we get:
+                        \begin{align*}
+                              \begin{cases}
+                                    x = 1 + \frac{1}{3} = \frac{4}{3} \\
+                                    y = -1 + 3 \cdot \frac{1}{3} = 0
+                              \end{cases}
+                        \end{align*}
+                        Which corresponds to the local minimum we get in part (a).
+
+                        With just 1 steepest descent step, we can converge to the local minimum.
+                        Literally zero-shot local minimum!
             \end{enumerate}
             Please explain how you got your results and show your work.
             No code is needed or expected.

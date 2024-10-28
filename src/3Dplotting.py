@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.patches import Circle
 from matplotlib.patches import Ellipse
 from mpl_toolkits import mplot3d
