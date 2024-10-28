@@ -333,6 +333,31 @@
             Show that any two eigenvectors of Q corresponding to distinct eigenvalues of Q are Q-orthogonal.
             Show this directly from the definition of eigenvector, without assuming eigenvectors are orthogonal in the usual sense.
 
+            \textbf{Solution:}
+
+            Let $v_1$ and $v_2$ be eigenvectors of $Q$ corresponding to distinct eigenvalues $\lambda_1$ and $\lambda_2$ respectively, $\lambda_1 \neq \lambda_2$.
+            Then we have:
+            \begin{align*}
+                  Qv_1 & = \lambda_1 v_1 \\
+                  Qv_2 & = \lambda_2 v_2
+            \end{align*}
+            Then we can derive the 2 forms of $v_1^T Q v_2$:
+            \begin{align}
+                  v_1^T Q v_2 & = v_1^T \lambda_2 v_2 = \lambda_2 v_1^T v_2          \\
+                  v_1^T Q v_2 & = v_1^T Q^T v_2 = (Qv_1)^T v_2 = \lambda_1 v_1^T v_2
+            \end{align}
+            Subtract (2) from (3) we get:
+            \begin{align*}
+                  (\lambda_2 - \lambda_1) v_1^T v_2 = 0
+            \end{align*}
+            Because $\lambda_1 \neq \lambda_2$, we have $v_1^T v_2 = 0$, the usual sense of orthogonal eigen vectors.
+
+            Now plug this back into (2) or (3) we get:
+            \begin{align*}
+                  v_1^T Q v_2 = 0
+            \end{align*}
+            So $v_1$ and $v_2$ are $Q$-orthogonal.
+
             No code is needed or expected for this problem. Please put your work into the pdf.
 
             \clearpage
