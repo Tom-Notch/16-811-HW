@@ -387,6 +387,55 @@
             No code is needed or expected for this problem.
             Please put your work into the pdf.
 
+            \textbf{Solution:}
+
+            Let $x$ and $y$ be the sides of the rectangle, so the area is $A = xy$ and the perimeter is $P = 2x + 2y$.
+
+            So formally, the problem is:
+
+            \begin{align*}
+                  \max_{x, y} & \quad xy                  \\
+                  \text{s.t.} & \quad x + y = \frac{P}{2}
+            \end{align*}
+
+            Let $\mathcal{L}(x, y, \lambda) = xy - \lambda(x + y - \frac{P}{2})$.
+
+            Then taking first derivative of $\mathcal{L}$ we have:
+
+            \begin{align*}
+                  \begin{cases}
+                        \frac{\partial \mathcal{L}}{\partial x}       & = y - \lambda = 0          \\
+                        \frac{\partial \mathcal{L}}{\partial y}       & = x - \lambda = 0          \\
+                        \frac{\partial \mathcal{L}}{\partial \lambda} & = -x - y + \frac{P}{2} = 0
+                  \end{cases} \Rightarrow
+                  \begin{cases}
+                        x = y = \frac{P}{4} \\
+                        \lambda = \frac{P}{4}
+                  \end{cases}
+            \end{align*}
+            \textbf{This gives us the maximum area of $\frac{P^2}{16}$.}
+
+            To verify the second-order sufficiency conditions, we need to compute the Hessian of $\mathcal{L}$:
+            \begin{align*}
+                  H_{\mathcal{L}}(x, y) = \begin{bmatrix}
+                        \frac{\partial^2 \mathcal{L}}{\partial x^2}          & \frac{\partial^2 \mathcal{L}}{\partial x \partial y} \\
+                        \frac{\partial^2 \mathcal{L}}{\partial y \partial x} & \frac{\partial^2 \mathcal{L}}{\partial y^2}          \\
+                  \end{bmatrix} = \begin{bmatrix}
+                        0 & 1 \\
+                        1 & 0 \\
+                  \end{bmatrix}
+            \end{align*}
+
+            And we need to determine the feasible set vector of $(x, y)$, i.e. the vectors $d = \begin{bmatrix}d_x \\ d_y\end{bmatrix}$ that are orthogonal to the gradient of the constraints $\nabla g(x, y) = \begin{bmatrix}1 \\ 1\end{bmatrix}$.
+            \begin{align*}
+                  d^T \nabla g(x, y) = \begin{bmatrix}d_x & d_y\end{bmatrix} \begin{bmatrix}1 \\ 1\end{bmatrix} = d_x + d_y = 0 \Rightarrow d = \begin{bmatrix}t \\ -t\end{bmatrix}
+            \end{align*}
+            Observe that:
+            \begin{align*}
+                  d^T H_{\mathcal{L}}(x, y) d = \begin{bmatrix}t & -t\end{bmatrix} \begin{bmatrix}0 & 1 \\ 1 & 0\end{bmatrix} \begin{bmatrix}t \\ -t\end{bmatrix} = -2t^2 < 0
+            \end{align*}
+            So the Hessian $H_{\mathcal{L}}(x, y)$ is negative definite on the feasible set vector of $(x, y)$, and the solution is a maximum.
+
             \clearpage
       \item In this problem, you are going to use trajectory optimization to find obstacle-free paths
             for a robot.
