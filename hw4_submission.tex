@@ -24,28 +24,15 @@
 
 \IEEEoverridecommandlockouts
 
-% Define a style for pseudocode
-\lstdefinelanguage{pseudocode}{
-  morekeywords={if, then, else, endif, while, do, end, for, each, in, return, function, let},
-  sensitive=false,
-  morecomment=[l]{//},
-  morecomment=[s]{/*}{*/},
-  morestring=[b]",
-}
-
 \lstset{
-  language=pseudocode,
-  basicstyle=\ttfamily,
-  keywordstyle=\color{blue}\bfseries,
-  commentstyle=\color{gray},
-  stringstyle=\color{red},
-  numbers=left,
-  numberstyle=\tiny\color{gray},
-  stepnumber=1,
-  numbersep=5pt,
-  tabsize=2,
-  showstringspaces=false,
-  breaklines=true,
+    language=MATLAB,             % Set language to MATLAB
+    basicstyle=\ttfamily\small,  % Set font to small and monospaced
+    keywordstyle=\color{blue},   % Color keywords
+    stringstyle=\color{orange},   % Color strings
+    commentstyle=\color{gray},   % Color comments
+    showstringspaces=false,      % Do not display string spaces
+    frame=single,                % Add a frame around the code
+    breaklines=true              % Line breaks for long lines
 }
 
 \setlist[enumerate,1]{label=\arabic{enumi}.}
@@ -136,6 +123,63 @@
             \end{enumerate}
 
             \textbf{Solution:}
+
+            Combined Code:
+            \begin{lstlisting}[language=Python]
+# combine tables together
+
+h = -0.05
+a, b = 1, 0
+N = int(abs((a - b) / h))
+
+# Euler
+y_euler = np.zeros(N + 1)
+y_euler[0] = 1
+
+# Runge-Kutta
+y_rk = np.zeros(N + 1)
+y_rk[0] = 1
+
+# Adams
+y_adams = np.zeros(N + 4)
+y_adams[3] = 1
+y_adams[2] = 1.01639635681485
+y_adams[1] = 1.03228011545637
+y_adams[0] = 1.04768955317165
+
+# y' = 1 / (3y^2)
+
+for n in range(N):
+      x = a + n * h
+
+      # Euler
+      y_euler_prime = 1 / (3 * y_euler[n] ** 2)
+      y_euler[n + 1] = y_euler[n] + h * y_euler_prime
+
+      # Runge-Kutta
+      k = np.zeros(4)
+      k[0] = 1 / (3 * y_rk[n] ** 2)
+      k[1] = 1 / (3 * (y_rk[n] + h * k[0] / 2) ** 2)
+      k[2] = 1 / (3 * (y_rk[n] + h * k[1] / 2) ** 2)
+      k[3] = 1 / (3 * (y_rk[n] + h * k[2]) ** 2)
+      y_rk[n + 1] = y_rk[n] + h / 6 * (k[0] + 2 * k[1] + 2 * k[2] + k[3])
+
+      # Adams
+      f = np.zeros(4)
+      previous_y = y_adams[n : n + 4]
+      f = 1 / (3 * previous_y**2)
+      y_adams[n + 4] = y_adams[n + 3] + h / 24 * (
+            55 * f[-1] - 59 * f[-2] + 37 * f[-3] - 9 * f[-4]
+      )
+
+      print(
+            f"n = {n}, x_{n} = {x}, y(x_{n}) = {x ** (1/3)}, y_euler_{n} = {y_euler[n]}, y(x_{n}) - y_euler_{n} = {x ** (1/3) - y_euler[n]}, y_runge_{n} = {y_rk[n]}, y(x_{n}) - y_runge_{n} = {x ** (1/3) - y_rk[n]}, y_adams_{n} = {y_adams[n + 3]}, y(x_{n}) - y_adams_{n} = {x ** (1/3) - y_adams[n + 3]}"
+      )
+
+print(
+      f"n = {N}, x_{N} = {b}, y(x_{N}) = {b ** (1/3)}, y_euler_{N} = {y_euler[N]}, y(x_{N}) - y_euler_{N} = {b ** (1/3) - y_euler[N]}, y_runge_{N} = {y_rk[N]}, y(x_{N}) - y_runge_{N} = {b ** (1/3) - y_rk[N]}, y_adams_{N} = {y_adams[N + 3]}, y(x_{N}) - y_adams_{N} = {b ** (1/3) - y_adams[N + 3]}"
+)
+            \end{lstlisting}
 
             Combined Table:
 
