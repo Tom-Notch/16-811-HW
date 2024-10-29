@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 import numpy as np
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from scipy.ndimage.morphology import distance_transform_edt
+from scipy.ndimage import distance_transform_edt
 
 waypoints = 300
 N = 101

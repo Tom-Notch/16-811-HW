@@ -590,12 +590,79 @@ print(
 
                         Pick convergence criteria and plot the path after convergence.
                         What happened to it?
+
+                        \textbf{Solution:}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6a_optimized_path_one_step_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6a_optimized_path_one_step_3D.png}
+                              \caption{Optimized Path After 1 Gradient Step for each Path Point.}
+                        \end{figure}
+                        I don't think the movement in 1 step is noticeable.
+
+                        Now we set the convergence criterion to be the amount of cost change normalized by learning rate (step size), and the threshold is set to be $10^{-3}$.
+                        \begin{lstlisting}[language=Python]
+# Now do continuous optimization with the amount of cost change as criterion
+Qa_path_continuous = initial_path.copy()
+optimization_points_continuous = Qa_path_continuous[1:-1]
+convergence_map = np.zeros(optimization_points_continuous.shape[0], dtype=bool)
+cost_interpolator = interpolate.RegularGridInterpolator((x, y), cost_map, bounds_error=False, fill_value=None)
+
+cost_change_threshold = 1e-3
+max_iter = 1000
+lr = 0.1
+
+for iter in range(max_iter):
+    # if all points have converged, break
+    if np.all(convergence_map):
+        print(f"Converged after {iter} iterations")
+        break
+
+    for idx in range(len(optimization_points_continuous)):
+        if convergence_map[idx]:
+            continue
+
+        point = optimization_points_continuous[idx]
+
+        # Interpolate gradient at current point
+        interpolated_gradient_x = gx_interpolator(point)
+        interpolated_gradient_y = gy_interpolator(point)
+
+        # Compute gradient vector
+        gradient_vector = np.array(
+            [interpolated_gradient_x, interpolated_gradient_y]
+        ).flatten()
+
+        current_cost = cost_interpolator(point)
+
+        next_point = point - lr * gradient_vector
+        next_cost = cost_interpolator(next_point)
+
+        # Check if the point has converged
+        if (current_cost - next_cost) / lr < cost_change_threshold:
+            convergence_map[idx] = True
+
+        # Take a step in the negative gradient direction
+        optimization_points_continuous[idx] = next_point
+
+plot_scene(Qa_path_continuous, cost_map, title="Converged Optimized Path", save_prefix="../figs/Q6_optimized_path_converged")
+                        \end{lstlisting}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6a_optimized_path_converged_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6a_optimized_path_converged_3D.png}
+                              \caption{Optimized Path Converged after 942 Iterations.}
+                        \end{figure}
+
+                        \textbf{It's not smooth at the start and end points, i.e., it does not respect the start and end point smoothness conditions.}
                   \item To avoid the issue from part (a), you need to tell the optimizer that this is a path instead of some independent 2D points.
 
                         One possibility is to consider an additional cost term, $\min (\frac{1}{2} \|\xi_i - \xi_{i-1}\|^2)$, that tells each 2D point $\xi_i$ to be close to the previous 2D point $\xi_{i-1}$ on the path.
                         This additional term is sometimes called a \textit{smoothness} cost.
 
-                        Augment your negative gradient from part (a) with a new negative gradient, obtained for each $\xi_i$ from the \textit{single} term $\frac{1}{2} \|\xi_i - \xi_i-1\|^2$.
+                        Augment your negative gradient from part (a) with a new negative gradient, obtained for each $\xi_i$ from the \textit{single} term $\frac{1}{2} \|\xi_i - \xi_{i-1}\|^2$.
 
                         (The gradient of this new term with respect to $\xi_i$ is $(\xi_i - \xi_{i-1})$.
                         Include this term for $\xi_i$, but ignore this term when taking a gradient with respect to any other $\xi_j$, including $\xi_{i-1}$.
@@ -607,10 +674,93 @@ print(
 
                         Plot the path after 100, 200 and 500 iterations.
                         Why doesn't this work?
+
+                        \textbf{Solution:}
+
+                        Why do we need 2 weights for 1 single ratio? I just set the weight of obstacle cost to be 0.9 and smoothness to be 1 - obstacle cost.
+                        \begin{lstlisting}[language=Python]
+for iter in range(max_iter):
+# if all points have converged, break
+if np.all(convergence_map):
+      print(f"Converged after {iter} iterations")
+      break
+
+if iter == 100:
+      plot_scene(Qb_path_continuous, cost_map, title="Optimized Path after 100 Steps", save_prefix="../figs/Q6b_optimized_path_100_steps")
+
+if iter == 200:
+      plot_scene(Qb_path_continuous, cost_map, title="Optimized Path after 200 Steps", save_prefix="../figs/Q6b_optimized_path_200_steps")
+
+if iter == 500:
+      plot_scene(Qb_path_continuous, cost_map, title="Optimized Path after 500 Steps", save_prefix="../figs/Q6b_optimized_path_500_steps")
+
+
+for idx in range(len(optimization_points_continuous)):
+      if convergence_map[idx]:
+            continue
+
+      point = optimization_points_continuous[idx]
+      previous_path_point = Qb_path_continuous[idx] # using Qb_path_continuous for corner case when idx = 0
+
+      # Interpolate gradient at current point
+      interpolated_gradient_x = gx_interpolator(point)
+      interpolated_gradient_y = gy_interpolator(point)
+
+      # Compute gradient vector
+      gradient_vector = np.array(
+            [interpolated_gradient_x, interpolated_gradient_y]
+      ).flatten()
+
+      gradient_vector = obstacle_cost_weight * gradient_vector + (1 - obstacle_cost_weight) * (
+            point - previous_path_point
+      )
+
+      current_cost = cost_interpolator(point)
+
+      next_point = point - lr * gradient_vector
+      next_cost = cost_interpolator(next_point)
+
+      # Check if the point has converged
+      if (current_cost - next_cost) / lr < cost_change_threshold:
+            convergence_map[idx] = True
+
+      # Take a step in the negative gradient direction
+      optimization_points_continuous[idx] = next_point
+                        \end{lstlisting}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6b_optimized_path_100_steps_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6b_optimized_path_100_steps_3D.png}
+                              \caption{Optimized Path after 100 Iterations.}
+                        \end{figure}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6b_optimized_path_200_steps_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6b_optimized_path_200_steps_3D.png}
+                              \caption{Optimized Path after 200 Iterations.}
+                        \end{figure}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6b_optimized_path_500_steps_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6b_optimized_path_500_steps_3D.png}
+                              \caption{Optimized Path after 500 Iterations.}
+                        \end{figure}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6b_optimized_path_converged_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6b_optimized_path_converged_3D.png}
+                              \caption{Optimized Path Converged after 1010 Iterations.}
+                        \end{figure}
+
+                        \textbf{Does not respect end point smoothness condition.}
                   \item Finally, try augmenting the obstacle gradient with a different smoothness cost, telling each 2D point to be close to both its previous and next points on the path:
 
                         $$
-                              \min (\frac{1}{2} \|\xi_i - \xi_{i-1}\|^2 + \frac{1}{2} \|\xi_i+1 - \xi_i\|^2).
+                              \min (\frac{1}{2} \|\xi_i - \xi_{i-1}\|^2 + \frac{1}{2} \|\xi_{i+1} - \xi_i\|^2).
                         $$
 
                         Taking the gradient with respect to $\xi_i$ yields $(\xi_i - \xi_{i-1}) + (\xi_i - \xi_{i+1})$, which is $-\xi_{i-1} + 2\xi_i - \xi_{i+1}$.
@@ -624,13 +774,98 @@ print(
                         \end{enumerate}
                         Plot the path after 100 and 5000 iterations.
                         Why is this version better?
+
+                        \textbf{Solution:}
+
+                        \begin{lstlisting}[language=Python]
+for iter in range(max_iter):
+# if all points have converged, break
+if np.all(convergence_map) and converge_iter == 0:
+      print(f"Converged after {iter} iterations")
+      converge_iter = iter
+
+if iter == 100:
+      plot_scene(Qc_path_continuous, cost_map, title="Optimized Path after 100 Steps", save_prefix="../figs/Q6c_optimized_path_100_steps")
+
+for idx in range(len(optimization_points_continuous)):
+      # if convergence_map[idx]:
+      #     continue
+
+      point = optimization_points_continuous[idx]
+      previous_path_point = Qc_path_continuous[idx] # using Qc_path_continuous for corner case when idx = 0
+      next_path_point = Qc_path_continuous[idx + 2] # using Qc_path_continuous for corner case when idx = the last index
+
+      # Interpolate gradient at current point
+      interpolated_gradient_x = gx_interpolator(point)
+      interpolated_gradient_y = gy_interpolator(point)
+
+      # Compute gradient vector
+      gradient_vector = np.array(
+            [interpolated_gradient_x, interpolated_gradient_y]
+      ).flatten()
+
+      gradient_vector = obstacle_cost_weight * gradient_vector + (1 - obstacle_cost_weight) * (
+            -previous_path_point + 2 * point - next_path_point
+      )
+
+      current_cost = cost_interpolator(point)
+
+      next_point = point - lr * gradient_vector
+      next_cost = cost_interpolator(next_point)
+
+      # Check if the point has converged
+      if (current_cost - next_cost) / lr < cost_change_threshold:
+            convergence_map[idx] = True
+
+      # Take a step in the negative gradient direction
+      optimization_points_continuous[idx] = next_point
+                        \end{lstlisting}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6c_optimized_path_100_steps_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6c_optimized_path_100_steps_3D.png}
+                              \caption{Optimized Path after 100 Iterations.}
+                        \end{figure}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6c_optimized_path_converged_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6c_optimized_path_converged_3D.png}
+                              \caption{Optimized Path Converged after 1030 Iterations.}
+                        \end{figure}
+
+                        \begin{figure}[H]
+                              \centering
+                              \includegraphics[width=.49\linewidth]{figs/Q6c_optimized_path_max_steps_2D.png}
+                              \includegraphics[width=.49\linewidth]{figs/Q6c_optimized_path_max_steps_3D.png}
+                              \caption{Optimized Path after 5000 Iterations.}
+                        \end{figure}
+                        \textbf{Better because it respects both start and end point smoothness conditions.}
                   \item What will happen if you were to start the procedure from different initial paths?
 
                         Will the final answer be the same every time? Why?
+
+                        \textbf{Solution:}
+
+                        Will not be the same every time because the optimization is a local optimization, and the final answer depends on the initialization.
                   \item Suppose that the final solution path found by gradient descent, given some initial path and given our original cost function, is not feasible for the robot to execute (it still passes through some high cost regions that you would rather not have the robot pass through)?
                         What simple common-sense strategy can you come up with to try to mitigate this problem?
                         (\textit{No need to write code unless necessary.
                               We expect a very short description of the strategy only.})
+
+                        \textbf{Solution:}
+
+                        Well, this is exactly what I was asking on piazza (the question was set to private ;)).
+
+                        Smoothness to human eyes is different from smoothness to robotic control, it at least involves 2 aspects:
+                        \begin{enumerate}
+                              \item After obtaining the path represented as discrete points, we must do what was done in the last question of homework 2, i.e., parametrize the path to yield continuous functions $f_x(t)$.
+                                    e.g., in quadrotor control we have minimum snap/jerk trajectory.
+                              \item The optimization of path should ideally assume continuous path representation, otherwise the path points could end up in pretty bad places, e.g., 2 originally adjacent points going into 2 different abyss, with an un-surpassable hill in between.
+                                    This can happen as a result of discretization aliasing, when you have non-matching discretization granularity for the path and the obstacle cost map. (map is dense, but path points are sparse)
+                                    This would involve "curve-minimization", but that's probably non-trivial.
+                        \end{enumerate}
             \end{enumerate}
 
             Please submit code for parts (a), (b), and (c), but none is required for (d) and (e).
