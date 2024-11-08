@@ -59,7 +59,7 @@
                         \textbf{Solution:}
                         \begin{figure}[H]
                               \centering
-                              \includegraphics[width=0.5\linewidth]{figs/Q1.png}
+                              \includegraphics[width=0.5\linewidth]{figs/Q1.pdf}
                               \caption{Graph of $f(x) = sin (x) - 0.5$}
                         \end{figure}
                   \item Determine the best uniform approximation by a quadratic to the function $f (x)$ on the interval $[-\frac{\pi}{2}, \frac{\pi}{2}]$.
@@ -200,24 +200,24 @@ f, n: int, interval: list, max_num_iteration: int = 100, tolerance: float = 1e-5
                         \end{lstlisting}
                         \begin{figure}[H]
                               \centering
-                              \begin{subfigure}{0.49\linewidth}
+                              \begin{subfigure}[b]{0.49\linewidth}
                                     \centering
-                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_1.png}
+                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_1.pdf}
                                     \caption{$n = 1$}
                               \end{subfigure}
-                              \begin{subfigure}{0.49\linewidth}
+                              \begin{subfigure}[b]{0.49\linewidth}
                                     \centering
-                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_2.png}
+                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_2.pdf}
                                     \caption{$n = 2$}
                               \end{subfigure} \\
-                              \begin{subfigure}{0.49\linewidth}
+                              \begin{subfigure}[b]{0.49\linewidth}
                                     \centering
-                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_3.png}
+                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_3.pdf}
                                     \caption{$n = 3$, error change does not converge to $< 10^{-5}$ in 1000 iterations}
                               \end{subfigure}
-                              \begin{subfigure}{0.49\linewidth}
+                              \begin{subfigure}[b]{0.49\linewidth}
                                     \centering
-                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_9.png}
+                                    \includegraphics[width=\linewidth]{figs/Q1_c_poly_9.pdf}
                                     \caption{$n = 9$}
                               \end{subfigure}
                               \caption{Best Uniform Approximation using the Remez Exchange Algorithm}
@@ -328,24 +328,24 @@ def least_square_approximation(f, n: int, interval: list):
                         \end{lstlisting}
                         \begin{figure}[H]
                               \centering
-                              \begin{subfigure}{0.49\linewidth}
+                              \begin{subfigure}[b]{0.49\linewidth}
                                     \centering
-                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_1.png}
+                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_1.pdf}
                                     \caption{$n = 1$}
                               \end{subfigure}
-                              \begin{subfigure}{0.49\linewidth}
+                              \begin{subfigure}[b]{0.49\linewidth}
                                     \centering
-                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_2.png}
+                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_2.pdf}
                                     \caption{$n = 2$}
                               \end{subfigure} \\
-                              \begin{subfigure}{0.49\linewidth}
+                              \begin{subfigure}[b]{0.49\linewidth}
                                     \centering
-                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_3.png}
+                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_3.pdf}
                                     \caption{$n = 3$}
                               \end{subfigure}
-                              \begin{subfigure}{0.49\linewidth}
+                              \begin{subfigure}[b]{0.49\linewidth}
                                     \centering
-                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_9.png}
+                                    \includegraphics[width=\linewidth]{figs/Q1_d_poly_9.pdf}
                                     \caption{$n = 9$, complex error occurs here so they look close}
                               \end{subfigure}
                               \caption{Least Square Approximation using Legendre Polynomials}
@@ -431,13 +431,13 @@ def normal_equation_method(xi: np.array, yi: np.array, n_poly: int, n_trig: int,
             My initial guess:
             \begin{figure}[H]
                   \centering
-                  \includegraphics[width = .6\linewidth]{figs/Q2_guess.png}
+                  \includegraphics[width = .6\linewidth]{figs/Q2_guess.pdf}
                   \caption{$f(x) = 1.25 x - 0.75 + 0.625 \sin(5\pi x)$}
             \end{figure}
             The Method of Normal Equations:
             \begin{figure}[H]
                   \centering
-                  \includegraphics[width = .6\linewidth]{figs/Q2_fit.png}
+                  \includegraphics[width = .6\linewidth]{figs/Q2_fit.pdf}
                   \caption{$f(x) \approx x - 0.7 + 0.6 \sin(5\pi x)$}
             \end{figure}
 
@@ -635,12 +635,12 @@ def fit_plane(points: np.array) -> np.array:
                         Average distance = 0.002740250661757354
                         \begin{figure}[H]
                               \centering
-                              \begin{subfigure}{.49\linewidth}
-                                    \includegraphics[width=.99\linewidth]{figs/Q4_clear_table_points.png}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_clear_table_points.pdf}
                                     \caption{clear\_table.txt}
                               \end{subfigure}
-                              \begin{subfigure}{.49\linewidth}
-                                    \includegraphics[width=.99\linewidth]{figs/Q4_clear_table_plane.png}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_clear_table_plane.pdf}
                                     \caption{Fitted Plane, note that Z axis is auto-scaled}
                               \end{subfigure}
                               \caption{Fitted Plane on clear\_table.txt}
@@ -652,6 +652,9 @@ def fit_plane(points: np.array) -> np.array:
 
                         \textbf{Solution:}
 
+                        Why?
+                        \textbf{Well, clearly not all the points are close to the ideal plane.}
+
                         Plane equation:
                         \begin{align*}
                               -0.0975611845981769x - 0.973054533289032y - 0.208917903745619z + 0.774119219789838 = 0
@@ -659,17 +662,16 @@ def fit_plane(points: np.array) -> np.array:
                         Average distance is 0.03741737808121337
                         \begin{figure}[H]
                               \centering
-                              \begin{subfigure}{.49\linewidth}
-                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_plane.png}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_plane.pdf}
                                     \caption{cluttered\_table.txt}
                               \end{subfigure}
-                              \begin{subfigure}{.49\linewidth}
+                              \begin{subfigure}[b]{.49\linewidth}
                                     \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_vis.png}
                                     \caption{visualization in open3d}
                               \end{subfigure}
                               \caption{Fitted Plane on cluttered\_table.txt}
                         \end{figure}
-                        Well, clearly not all the points are close to the ideal plane.
                   \item Can you suggest a way to still find a fit to the plane of the table regardless of clutter?
                         Verify your idea by writing a program that can successfully find the dominant plane in a list of points regardless of outliers.
                               [Hint: You may assume that the number of points in the plane is much larger than the number of points not in the plane.]
@@ -677,51 +679,197 @@ def fit_plane(points: np.array) -> np.array:
 
                         \textbf{Solution:}
 
-                        RANSAC
+                        RANSAC: RANdom SAmple Consensus is an iterative method to estimate parameters of a mathematical model from a set of observed data that contains outliers.
+                        In this context, the outlier is the point that is far from the fitted plane.
+
+                        We can do the following steps:
+                        \begin{enumerate}
+                              \item List out all possible combinations of 3 non-colinear points
+                              \item Fit a plane to each of these combinations
+                              \item Calculate the number of points close to the fitted planes. Here, we need a distance threshold to determine "close"
+                              \item Find the plane that's close to the most number of points
+                              \item Return the inlier set, which is the 3 points and all the points "close" to its fitted plane
+                        \end{enumerate}
+                        Now there are several ways to improve this "deterministic" algorithm, to make it more "RANSAC" like:
+                        \begin{itemize}
+                              \item This algorithm is not "randomized" as we brute-force test on all possible planes, but we can set a hyperparameter $\lambda \in (0, 1]$ to randomly sample a percentage of these combinations.
+
+                                    I found this formula to determine N:
+                                    $$
+                                          N = \frac{\log(1 - p)}{\log(1 - \omega^n)}
+                                    $$
+                                    Where $p$ is the probability of success, $\omega$ is the percentage of inliers, and $n$ is the number of data points required to estimate the model parameters (which is 3 in plane fitting).
+                              \item The distance threshold is a hard criterion, and might require prior knowledge of the smoothness of the surface.
+                                    Instead, we can use some adaptive soft criteria, e.g., statistical methods, evaluate the distribution of \# inliers (or percentage of inliers) vs this distance threshold, up to some granularity/quantization.
+                                    \begin{itemize}
+                                          \item e.g., if over 50\% of the points are within $0.01 \times \text{max distance}$, then this is probably a good plane, and all the points within this distance are probably inliers.
+                                          \item Why is variance not a good criterion? Consider the tube-like point cloud in d) and e), points on the opposite plane will cause high variance
+                                    \end{itemize}
+                        \end{itemize}
+
+                        So, formally, we define this criteria (See Fig.~\ref{fig: adaptive_inlier_criteria}):
+                        \begin{enumerate}
+                              \item Plot the inlier ratio curve, which is defined as the number of inliers vs the distance threshold, which ranges from 0 to the maximum distance, with approximately 100 discretization levels.
+                              \item Cap the inlier ratio curve to only number of inliers greater than inlier ratio x total number of points
+                              \item Differentiate twice the capped inlier ratio curve
+                              \item Find the minimum of the second derivative, which indicates a sharp turn at knee (reflection) point, and indicates the desired soft distance threshold
+                        \end{enumerate}
+                        \begin{figure}[H]
+                              \centering
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_adaptive_inlier_criteria_inlier_ratio.pdf}
+                                    \caption{Inlier Ratio Curve}
+                              \end{subfigure}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_adaptive_inlier_criteria_normalized.pdf}
+                                    \caption{Capped Normalized Inlier Ratio Curve}
+                              \end{subfigure} \\
+                              \centering
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_adaptive_inlier_criteria_diff.pdf}
+                                    \caption{$1^{\text{st}}$ Derivative of (b)}
+                              \end{subfigure}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_adaptive_inlier_criteria_diff_diff.pdf}
+                                    \caption{$2^{\text{nd}}$ Derivative of (b)}
+                              \end{subfigure}
+                              \caption{Statistical Analysis of Inlier Ratio Curve. Red line indicates the estimated inlier distance threshold}
+                              \label{fig: adaptive_inlier_criteria}
+                        \end{figure}
+                        \begin{lstlisting}[language=Python]
+def adaptive_inlier_criteria(
+      points: np.ndarray,
+      plane_coeffs: np.ndarray,
+      inlier_ratio: float,
+      plot=False,
+      save_fig_location: str = None,
+      statistical_quantization_level: int = 100,
+      ):
+      NUM_POINTS = points.shape[0]
+
+      distance = point_to_plane_distance(points, plane_coeffs)
+      x = np.linspace(0, distance.max(), statistical_quantization_level)
+      y = np.array([np.sum(distance <= threshold) for threshold in x])
+
+      inlier_min_count_index = np.where(y >= inlier_ratio * NUM_POINTS)[0][0]
+
+      x_norm_cap = (x / x.max())[inlier_min_count_index:]
+      y_norm_cap = (y / y.max())[inlier_min_count_index:]
+
+      diff_curve = np.gradient(y_norm_cap, x_norm_cap)
+
+      diff_2_curve = np.gradient(diff_curve, x_norm_cap)
+
+      criteria_index = np.argmin(diff_2_curve) + inlier_min_count_index
+
+      inlier_x_norm_threshold = x_norm_cap[np.argmin(diff_2_curve)]
+      inlier_distance_threshold = x[criteria_index]
+      inlier_count = y[criteria_index]
+
+      if plot:
+            print(f"inlier min # points: {y[inlier_min_count_index]}")
+
+            # Plot the inlier ratio curve
+            plt.plot(x[inlier_min_count_index:], y[inlier_min_count_index:])
+            plt.axvline(inlier_distance_threshold, color="r", linestyle="--")
+            plt.xlabel("Threshold")
+            plt.ylabel("# Inliers")
+            plt.title("Inlier Ratio Curve")
+            plt.grid()
+
+            if save_fig_location is not None:
+                  plt.savefig(save_fig_location + "_inlier_ratio.pdf", transparent=True)
+
+            plt.show()
+
+            # Plot the normalized inlier ratio curve
+            plt.plot(x_norm_cap, y_norm_cap)
+            plt.axvline(inlier_x_norm_threshold, color="r", linestyle="--")
+            plt.xlabel("Capped Normalized Threshold")
+            plt.ylabel("Capped Normalized # Inliers")
+            plt.title("Capped Normalized Inlier Ratio Curve")
+            plt.grid()
+
+            if save_fig_location is not None:
+                  plt.savefig(save_fig_location + "_normalized.pdf", transparent=True)
+
+            plt.show()
+
+            # Plot the difference curve
+            plt.plot(x_norm_cap, diff_curve)
+            plt.axvline(inlier_x_norm_threshold, color="r", linestyle="--")
+            plt.xlabel("Normalized Threshold")
+            plt.ylabel("First Order Derivative")
+            plt.title("First Order Derivative Curve")
+            plt.grid()
+
+            if save_fig_location is not None:
+                  plt.savefig(save_fig_location + "_diff.pdf", transparent=True)
+
+            plt.show()
+
+            # Plot the second order difference curve
+            plt.plot(x_norm_cap, diff_2_curve)
+            plt.axvline(inlier_x_norm_threshold, color="r", linestyle="--")
+            plt.xlabel("Normalized Threshold")
+            plt.ylabel("Second Order Derivative")
+            plt.title("Second Order Derivative Curve")
+            plt.grid()
+
+            if save_fig_location is not None:
+                  plt.savefig(save_fig_location + "_diff_diff.pdf", transparent=True)
+
+            plt.show()
+
+            print(f"Inlier threshold: {inlier_distance_threshold}")
+            print(f"# inliers: {inlier_count}")
+
+      inlier_indices = np.where(distance <= inlier_distance_threshold)
+
+      return inlier_distance_threshold, inlier_count, inlier_indices
+                        \end{lstlisting}
                         \begin{lstlisting}[language=Python]
 def RANSAC_fit_plane(
       points: np.array,
-      max_iter: int = 10000,
-      sample_ratio: float = 0.01,
-      distance_inlier_threshold: float = 0.01,
-) -> np.array:
-      """Fit a plane to a set of noisy 3D points using RANSAC.
+      N: int,
+      inlier_ratio: float,
+      statistical_quantization_level: int = 100,
+      ) -> np.array:
 
-      Args:
-            points (np.array): points in shape (N, 3)
-            max_iter (int, optional): maximum iteration to perform random sampling. Defaults to 10000.
-            sample_ratio (float, optional): the amount of points to sample, sample_ratio * N. Defaults to 0.01. Will not be less than 10.
-            distance_inlier_threshold (float, optional): inlier points maximum average distance to their fitted plane. Defaults to 0.01.
-
-      Raises:
-            ValueError: No inlier points found.
-
-      Returns:
-            np.array: inlier points
-      """
       NUM_POINTS = points.shape[0]
-      SAMPLE_SIZE = max(int(points.shape[0] * sample_ratio), 10)
+      SAMPLE_SIZE = 3
 
-      inlier_index = np.array([], dtype=int)
+      sampled_combinations = draw_distinct_combinations(NUM_POINTS, SAMPLE_SIZE, N)
 
-      for _ in range(max_iter):
-            # randomly sample SAMPLE_SIZE points index
-            random_index = np.random.permutation(np.arange(NUM_POINTS, dtype=int))[
-                  :SAMPLE_SIZE
-            ]
+      # Init
+      smallest_inlier_distance_threshold = np.inf
+      best_plane_inlier_count = 0
+      best_plane_indices = np.array([], dtype=int)
+      best_plane_inlier_indices = np.array([], dtype=int)
 
+      for random_index in sampled_combinations:
             coeff = fit_plane(points[random_index])
-            distance = average_point_to_plane_distance(points[random_index], coeff)
-            if distance <= distance_inlier_threshold:
-                  inlier_index = np.append(inlier_index, random_index)
-                  inlier_index = np.sort(inlier_index)
-                  inlier_index = np.unique(inlier_index)
+            # distance = point_to_plane_distance(points[random_index], coeff)
+            # distance = np.sort(distance)
 
-      if inlier_index.size == 0:
-            raise ValueError("No inlier found.")
+            inlier_distance_threshold, inlier_count, inlier_indices = (
+                  adaptive_inlier_criteria(
+                  points,
+                  coeff,
+                  inlier_ratio,
+                  statistical_quantization_level=statistical_quantization_level,
+                  )
+            )
 
-      print(f"Inliers ratio: {inlier_index.size / NUM_POINTS}")
-      return points[inlier_index]
+            if inlier_distance_threshold <= smallest_inlier_distance_threshold:
+                  smallest_inlier_distance_threshold = inlier_distance_threshold
+                  best_plane_inlier_count = inlier_count
+                  best_plane_inlier_indices = inlier_indices
+                  best_plane_indices = random_index
+
+      print(f"Inliers ratio: {best_plane_inlier_count / NUM_POINTS}")
+      print(f"Smallest inlier distance threshold: {smallest_inlier_distance_threshold}")
+      return points[best_plane_inlier_indices]
                         \end{lstlisting}
                         Plane Equation:
                         \begin{align*}
@@ -732,11 +880,11 @@ def RANSAC_fit_plane(
                         Average distance to table points is 0.005143845669654812
                         \begin{figure}[H]
                               \centering
-                              \begin{subfigure}{.49\linewidth}
-                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_plane_ransac.png}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_plane_ransac.pdf}
                                     \caption{cluttered\_table.txt RANSAC}
                               \end{subfigure}
-                              \begin{subfigure}{.49\linewidth}
+                              \begin{subfigure}[b]{.49\linewidth}
                                     \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_table_ransac_vis.png}
                                     \caption{visualization in open3d}
                               \end{subfigure}
@@ -748,79 +896,8 @@ def RANSAC_fit_plane(
                         You may assume that there are roughly the same amount of points in each plane.
 
                         \textbf{Solution:}
-                        Extend the inlier criteria of RANSAC:
-                        \begin{lstlisting}[language=Python]
-def RANSAC_fit_plane_extended(
-      points: np.array,
-      num_planes: int,
-      max_iter: int = 10000,
-      sample_ratio: float = 0.001,
-      distance_inlier_threshold: float = 0.01,
-) -> np.array:
-      """extended RANSAC to fit multiple planes, inlier points must satisfy:
-      1. Itself is a plane with small average distance
-      2. Its fitted plane must be the same plane with existing inliers
-      3. The fitted plane's close to enough points (1/num_planes * 0.9)
 
-      Args:
-            points (np.array): points in shape (N, 3)
-            num_planes (int): number of planes to fit, assuming each plane has roughly the same number of inliers
-            max_iter (int, optional): maximum iteration to perform random sampling. Defaults to 10000.
-            sample_ratio (float, optional): the amount of points to sample, sample_ratio * N. Defaults to 0.0001. Will not be less than 5.
-            distance_inlier_threshold (float, optional): inlier points maximum average distance to their fitted plane. Defaults to 0.01.
-
-      Raises:
-            ValueError: No inlier points found.
-
-      Returns:
-            np.array: inlier points, might not be most points in its plane
-      """
-      NUM_POINTS = points.shape[0]
-      SAMPLE_SIZE = max(int(points.shape[0] * sample_ratio), 5)
-
-      print(f"Number of points: {NUM_POINTS}")
-      print(f"Sample size: {SAMPLE_SIZE}")
-
-      inlier_index = np.array([], dtype=int)
-
-      points_homo = np.hstack((points, np.ones((points.shape[0], 1))))
-
-      for iter in range(max_iter):
-            # randomly sample SAMPLE_SIZE points index
-            random_index = np.random.permutation(np.arange(NUM_POINTS, dtype=int))[
-                  :SAMPLE_SIZE
-            ]
-
-            extended_index = np.unique(np.append(inlier_index, random_index))
-
-            coeff = fit_plane(points[random_index])
-            distance = average_point_to_plane_distance(points[random_index], coeff)
-            extended_distance = average_point_to_plane_distance(
-                  points[extended_index], coeff
-            )
-
-            all_distances = np.abs(points_homo @ coeff)
-            num_inliers = np.where(all_distances <= distance_inlier_threshold)[0].size
-            inliers_ratio = num_inliers / NUM_POINTS
-
-            # print(f"inliers_ratio = {inliers_ratio}")
-
-            # Must satisfy: itself is a plane, it's the same plane with inliers, and it has enough inliers
-            if (
-                  distance <= distance_inlier_threshold
-                  and extended_distance <= distance_inlier_threshold
-                  and inliers_ratio > 1 / num_planes * 0.9
-            ):
-                  inlier_index = np.append(inlier_index, random_index)
-                  inlier_index = np.sort(inlier_index)
-                  inlier_index = np.unique(inlier_index)
-
-      if inlier_index.size == 0:
-            raise ValueError("No inlier found.")
-
-      print(f"Inliers ratio: {inlier_index.size / NUM_POINTS}")
-      return points[inlier_index]
-                        \end{lstlisting}
+                        The original formulation of RANSAC is already capable of fitting planes softly, so we just need to remove inlier points of a fitted plane once at a time.
                         Plane Equations:
                         \begin{align*}
                               \begin{cases}
@@ -832,16 +909,17 @@ def RANSAC_fit_plane_extended(
                         \end{align*}
                         \begin{figure}[H]
                               \centering
-                              \begin{subfigure}{.49\linewidth}
-                                    \includegraphics[width=.99\linewidth]{figs/Q4_clean_hallway_plane_ransac_1.png}
-                                    \caption{clean\_hallway.txt extended RANSAC $1^{st}$ plane}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_clean_hallway_plane_ransac_all.pdf}
+                                    \caption{clean\_hallway.txt all plane overlapped}
                               \end{subfigure}
-                              \begin{subfigure}{.49\linewidth}
-                                    \includegraphics[width=.99\linewidth]{figs/Q4_clean_hallway_extended_ransac_vis_all.png}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_clean_hallway_extended_ransac_vis_all.pdf}
                                     \caption{visualization of all planes in open3d}
                               \end{subfigure}
                               \caption{extended RANSAC fitted plane on clean\_hallway.txt}
                         \end{figure}
+                        \textbf{Run the Jupyter Notebook to visualize the plains interactively with open3d.}
                         More results available in the \textit{figs/} folder.
                   \item You decide it is time to test your gecko robot's suction feet and move it to a different hallway.
                         The feet are strong enough to ignore the force of gravity, allowing the robot to walk on the floor, walls, or ceiling.
@@ -853,152 +931,93 @@ def RANSAC_fit_plane_extended(
 
                         \textbf{Solution:}
 
-                        I characterize the smoothness of each surface by the variance of distance between all the points to the fitted plane, lower variance indicates higher smoothness.
-                        \begin{lstlisting}[language=Python]
-def voxel_downsample_point_cloud(points, voxel_size):
-    """
-    Downsamples the input point cloud using a voxel grid filter.
-
-    Args:
-        points (np.array): Input points in shape (N, 3).
-        voxel_size (float): The size of the voxel grid.
-
-    Returns:
-        np.array: Downsampled points in shape (M, 3).
-    """
-    # Create Open3D point cloud
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(points)
-
-    # Downsample
-    downsampled_pcd = pcd.voxel_down_sample(voxel_size)
-
-    # Extract NumPy array
-    downsampled_points = np.asarray(downsampled_pcd.points)
-
-    return downsampled_points
-                        \end{lstlisting}
-                        RANSAC is modified to consider inlier points only if their fitted plane is close to enough number of points (threshold is adaptive).
+                        Similarly, we just need to voxel\_downsample the non-uniform point cloud, then set the inlier\_ratio adaptively in each iteration.
+                        \textbf{The criteria is the number of inlier points fitted to the planes.}
                         \begin{lstlisting}[language=Python]
 def RANSAC_fit_multiple_planes(
-      points: np.array,
-      num_planes: int,
-      max_iter: int = 10000,
-      sample_size: int = 5,
-      distance_threshold: float = 0.01,
-      inlier_ratio: float = 0.9,
+    points: np.array,
+    num_planes: int,
+    N: int = 10000,
+    distance_threshold: float = 0.1,
 ):
-      """Fit multiple planes to a set of 3D points using RANSAC.
+    """Fit multiple planes to a set of 3D points using RANSAC.
 
-      Args:
-            points (np.array): Points in shape (N, 3).
-            num_planes (int): Number of planes to fit.
-            max_iter (int, optional): Maximum iterations for RANSAC. Defaults to 10000.
-            sample_size (int, optional): number of points to sample for every RANSAC iteration. Defaults to 5.
-            distance_threshold (float, optional): Distance threshold for inliers. Defaults to 0.01.
-            min_inliers (int, optional): Minimum number of inliers to accept a plane. Adjust as needed.
+    Args:
+        points (np.array): Points in shape (N, 3).
+        num_planes (int): Number of planes to fit.
+        max_iter (int, optional): Maximum iterations for RANSAC. Defaults to 10000.
+        sample_size (int, optional): number of points to sample for every RANSAC iteration. Defaults to 5.
+        distance_threshold (float, optional): Distance threshold for inliers. Defaults to 0.01.
+        min_inliers (int, optional): Minimum number of inliers to accept a plane. Adjust as needed.
 
-      Returns:
-      """
-      points = points.copy().reshape(-1, 3)
-      remaining_points = points.copy().reshape(-1, 3)
+    Returns:
+    """
+    points = points.copy().reshape(-1, 3)
+    remaining_points = points.copy().reshape(-1, 3)
 
-      planes = []
+    planes = []
 
-      for i in range(num_planes)[::-1]:
-            print(f"Fitting plane {i + 1}...")
+    for i in range(num_planes)[::-1]:
+        print(f"Fitting plane {i + 1}...")
 
-            min_inliers = int(remaining_points.shape[0] / (i + 1) * inlier_ratio)
+        inlier_points = RANSAC_fit_plane(
+            remaining_points,
+            N=N,
+            inlier_ratio=1 / (i + 1)
+            - 0.1,  # - 0.1 to prevent setting inlier_ratio to 1
+        )
 
-            inlier_indices = np.array([], dtype=int)
-            # Can no longer assume the same number of inliers for each plane
-            for _ in range(max_iter):
-                  # Randomly sample points
-                  sample_indices = np.random.permutation(
-                  np.arange(remaining_points.shape[0], dtype=int)
-                  )[:sample_size]
-                  extended_index = np.unique(np.append(inlier_indices, sample_indices))
-                  sample_points = remaining_points[sample_indices]
+        coeff = fit_plane(inlier_points)
 
-                  # Fit a plane to the sample points
-                  plane_coefficients = fit_plane(sample_points)
+        # find all points that are close to this plane in points
+        distance_all_points = np.abs(points @ coeff[:3] + coeff[3])
+        point_close_to_this_plane = points[
+            np.where(distance_all_points <= distance_threshold)
+        ]
+        distance_close_to_this_plane = distance_all_points[
+            np.where(distance_all_points <= distance_threshold)
+        ]
+        print(f"Points close to this plane: {point_close_to_this_plane.shape[0]}")
+        planes.append(
+            {
+                "coeff": fit_plane(point_close_to_this_plane),
+                "mean_distance": distance_close_to_this_plane.mean(),
+                "var_distance": distance_close_to_this_plane.var(),
+                "var_distance_all": distance_all_points.var(),
+                "points": point_close_to_this_plane,
+                "num_points": point_close_to_this_plane.shape[0],
+            }
+        )
 
-                  fit_distance = average_point_to_plane_distance(
-                  sample_points, plane_coefficients
-                  )
-                  inlier_distance = average_point_to_plane_distance(
-                  remaining_points[extended_index], plane_coefficients
-                  )
+        # remove all points close to this plane from remaining points
+        distance_remaining_points = np.abs(remaining_points @ coeff[:3] + coeff[3])
+        remaining_points = remaining_points[
+            np.where(distance_remaining_points > distance_threshold)
+        ]
 
-                  all_distances = np.abs(
-                  remaining_points @ plane_coefficients[:3] + plane_coefficients[3]
-                  )
-                  num_inliers = np.where(all_distances <= distance_threshold)[0].size
+        print(f"Remaining points: {remaining_points.shape[0]}")
 
-                  if (
-                  fit_distance <= distance_threshold
-                  and inlier_distance <= distance_threshold
-                  and num_inliers >= min_inliers
-                  ):
-                  inlier_indices = np.append(inlier_indices, sample_indices)
-                  inlier_indices = np.sort(inlier_indices)
-                  inlier_indices = np.unique(inlier_indices)
+        plot_point_and_plane(remaining_points)
 
-            if inlier_indices.size > 0:
-                  print(f"Found {inlier_indices.size} inliers.")
-                  coeff = fit_plane(remaining_points[inlier_indices])
+    # Sort planes by number of points
+    planes = sorted(planes, key=lambda x: x["num_points"], reverse=True)
 
-                  # find all points that are close to this plane in points
-                  distance_all_points = np.abs(points @ coeff[:3] + coeff[3])
-                  point_close_to_this_plane = points[
-                  np.where(distance_all_points <= distance_threshold)
-                  ]
-                  distance_close_to_this_plane = distance_all_points[
-                  np.where(distance_all_points <= distance_threshold)
-                  ]
-                  print(f"Points close to this plane: {point_close_to_this_plane.shape[0]}")
-                  planes.append(
-                  {
-                        "coeff": fit_plane(point_close_to_this_plane),
-                        "mean_distance": distance_close_to_this_plane.mean(),
-                        "var_distance": distance_close_to_this_plane.var(),
-                        "var_distance_all": distance_all_points.var(),
-                        "points": point_close_to_this_plane,
-                        "num_points": point_close_to_this_plane.shape[0],
-                  }
-                  )
-
-                  # remove all points close to this plane from remaining points
-                  distance_remaining_points = np.abs(remaining_points @ coeff[:3] + coeff[3])
-                  remaining_points = remaining_points[
-                  np.where(distance_remaining_points > distance_threshold)
-                  ]
-
-                  print(f"Remaining points: {remaining_points.shape[0]}")
-
-      # Sort planes by number of points
-      planes = sorted(planes, key=lambda x: x["num_points"], reverse=True)
-
-      return planes
+    return planes
                         \end{lstlisting}
                         Some results:
                         \begin{figure}[H]
                               \centering
-                              \begin{subfigure}{.49\linewidth}
-                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_hallway_downsampled.png}
-                                    \caption{cluttered\_hallway.txt downsampled}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_last_vis.png}
+                                    \caption{Open3d visualization of 2 planes (other planes not visible in the same view direction)}
                               \end{subfigure}
-                              \begin{subfigure}{.49\linewidth}
-                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_hallway_planes.png}
+                              \begin{subfigure}[b]{.49\linewidth}
+                                    \includegraphics[width=.99\linewidth]{figs/Q4_cluttered_hallway_planes.pdf}
                                     \caption{cluttered\_hallway.txt RANSAC visualized with original point cloud}
                               \end{subfigure}
                               \caption{RANSAC fitted plane on cluttered\_hallway.txt}
                         \end{figure}
-                        The algorithm turns to be very fragile to parameter changes, e.g., sample size, distance threshold.
-
-                        There could be better metric, e.g., project close points to the fitted plane and see if there are holes, to prevent fitting a densely scanned ring instead of a plane.
-
-                        Anyway, here are the 2 best plane in terms of smoothness and number of points:
+                        Here are the 2 best plane in terms of number of points:
                         \begin{align*}
                               \begin{cases}
                                     0.0180113772483563x + 0.995495709171525y - 0.0930799834051354z + 0.534986213611912 & = 0, \|e\| \approx 0.0039050967482275882 \\
