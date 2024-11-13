@@ -64,6 +64,68 @@
                         Can you say how the endpoint conditions matter?
                         Be aware: There are many subtleties; don't expect to cover all, but explore what you can.]
 
+            \textbf{Solution:}
+
+            Surface area of revolution is given by
+            $$
+                  S = \int_{x_0}^{x_1} 2\pi y(x) \sqrt{1 + (y'(x))^2} dx.
+            $$
+            We want to minimize $S$ subject to the constraints $y(x_0) = y_0, y(x_1) = y_1$, so the optimization program is
+            \begin{align*}
+                  \min_y J(y) & = \int_{x_0}^{x_1} F(x, y, y') dx, \\
+                  s.t.        & \begin{cases}
+                        y_0 & = y(x_0) \\
+                        y_1 & = y(x_1)
+                  \end{cases}
+            \end{align*}
+            Where $F(x, y, y') = 2\pi y(x) \sqrt{1 + (y'(x))^2}$.
+
+            Now suppose $y^*$ minimizes $J$, and $\eta \in C^2 [x_0, x_1]$ be a random $\Delta$ function s.t. $\eta(x_0) = \eta(x_1) = 0$.
+            And we define $y(x) = y*(x) + \epsilon \eta(x)$, where $\epsilon \in \mathbb{R}$ is a small number.
+            Then we can define $J(S)$ w.r.t. $\epsilon$ as
+            \begin{align*}
+                  \Phi (\epsilon) & = \int_{x_0}^{x_1} F(x, y, y') dx                                                     \\
+                                  & = \int_{x_0}^{x_1} F(x, y^*(x) + \epsilon \eta(x), {y^*}'(x) + \epsilon \eta'(x)) dx.
+            \end{align*}
+            And we can calculate $\Phi'(0)$ as
+            \begin{align*}
+                  \Phi'(0) & = \int_{x_0}^{x_1} \frac{\partial F}{\partial y} \eta (x) dx + \int_{x_0}^{x_1} \frac{\partial F}{\partial y'} \eta'(x) dx               \\
+                           & = \int_{x_0}^{x_1} \left[ \frac{\partial F}{\partial y} - \frac{d}{dx} \left( \frac{\partial F}{\partial y'} \right) \right] \eta(x) dx.
+            \end{align*}
+            Because $y^*$ minimizes $J$, we have $\Phi'(0) = 0$. Also because $\eta$ is arbitrary, so we must have the Euler-Lagrange equation
+            $$
+                  \frac{\partial F}{\partial y} - \frac{d}{dx} \left( \frac{\partial F}{\partial y'} \right) = 0.
+            $$
+            Because we have
+            \begin{align*}
+                  \begin{cases}
+                        \frac{\partial F}{\partial y}  & = 2\pi \sqrt{1 + (y'(x))^2}                    \\
+                        \frac{\partial F}{\partial y'} & = 2\pi y(x) \frac{y'(x)}{\sqrt{1 + (y'(x))^2}}
+                  \end{cases}
+            \end{align*}
+            We can simplify the Euler-Lagrange equation as
+            \begin{align*}
+                  \frac{\partial F}{\partial y} - \frac{d}{dx} \left( \frac{\partial F}{\partial y'} \right) & = 2\pi \sqrt{1 + (y'(x))^2} - \frac{d}{dx} \left( 2\pi y(x) \frac{y'(x)}{\sqrt{1 + (y'(x))^2}} \right)                 \\
+                                                                                                             & = 2\pi \sqrt{1 + (y'(x))^2} - 2\pi \frac{d}{dx} \left( y(x) \frac{y'(x)}{\sqrt{1 + (y'(x))^2}} \right) = 0 \Rightarrow \\
+                  \frac{d}{dx} \left( \frac{y(x) y'(x)}{\sqrt{1 + (y'(x))^2}} \right)                        & = \sqrt{1 + (y'(x))^2}                                                                                                 \\
+            \end{align*}
+            Because $F(x, y(x), y'(x))$ does not explicitly depend on $x$, we can use the \textbf{Beltrami Identity} to simplify the equation as
+            \begin{align*}
+                  F - y'(x) \frac{\partial F}{\partial y'}                                            & = C = \text{constant} \Rightarrow                        \\
+                  2\pi y(x) \sqrt{1 + (y'(x))^2} - 2\pi y'(x) \frac{y(x) y'(x)}{\sqrt{1 + (y'(x))^2}} & = 2\pi \frac{y(x)}{\sqrt{1 + (y'(x))^2}} = C \Rightarrow \\
+                  y'(x) = \pm \sqrt{(Cy)^2 - 1}
+            \end{align*}
+            Note that the constant $C$ is absorbing all the constants in the equation, so we can solve the equation by integrating both sides as
+            $$
+                  \int \frac{dy}{\sqrt{(Cy)^2 - 1}} = \pm \int dx.
+            $$
+            Then we get
+            $$
+                  y(x) = \frac{cosh(C(x - x_0))}{C}
+            $$
+            Where $C$ depends on the boundary conditions $(x_0, y_0)$ and $(x_1, y_1)$.
+
+            \clearpage
       \item Using Calculus of Variations, show that the shortest curve between two points on a sphere is an arc of a great circle.
                   [Hints: There are different ways to solve this problem.
                         Here is one approach: Use spherical $(u, v)$ coordinates, where $x = R \sin v cos u, y = R \sin v \sin u, z = R \cos v,$ with $R$ the radius of the sphere.
