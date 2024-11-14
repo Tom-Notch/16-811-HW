@@ -125,20 +125,68 @@
             $$
             Where $C$ depends on the boundary conditions $(x_0, y_0)$ and $(x_1, y_1)$.
 
+            The shape visualized with \href{https://www.desmos.com/calculator}{Desmos} looks like a thin vase with big top and bottom, which is reasonable since we want the shape to shrink a little before it tries to reach another boundary, in order to minimize the surface area.
+
             \clearpage
       \item Using Calculus of Variations, show that the shortest curve between two points on a sphere is an arc of a great circle.
                   [Hints: There are different ways to solve this problem.
-                        Here is one approach: Use spherical $(u, v)$ coordinates, where $x = R \sin v cos u, y = R \sin v \sin u, z = R \cos v,$ with $R$ the radius of the sphere.
+                        Here is one approach: Use spherical $(u, v)$ coordinates, where $x = R \sin v \cos u, y = R \sin v \sin u, z = R \cos v,$ with $R$ the radius of the sphere.
                         (Do not worry about singularities in the representation.)
                         Rephrase 3D arclength $\sqrt{dx^2 + dy^2 + dz^2}$ as a function of $u, v, du, dv$.
                         View the curve as a function $v(u)$.
                         Observe that u does not appear directly in the resulting integrand for arclength, so replace the Euler-Lagrange equation with another, as in lecture.
                         You may find the following identity useful:
                         $$
-                              \int \frac{a dw}{\sqrt{\sin^4 w - a^2 \sin^2 w}} = - \sin^{-1}(\frac{\cot w}{\sqrt{\frac{1}{a^2} - 1}}) + k,
+                              \int \frac{a}{\sqrt{\sin^4 w - a^2 \sin^2 w}} dw = - \sin^{-1}(\frac{\cot w}{\sqrt{\frac{1}{a^2} - 1}}) + k,
                         $$
                         where a and k are appropriate constants.]
 
+            \textbf{Solution:}
+
+            The arclength of a curve on a sphere is given by
+            $$
+                  L = \int_{u_0}^{u_1} R \sqrt{[v'(u)]^2 + \sin^2v(u)} du.
+            $$
+            Now remove constant linear parameter $R$ and let $F(u, v(u), v'(u)) = \sqrt{[v'(u)]^2 + \sin^2v(u)}$.
+            Omitting all the derivation we did in Question 1, the Euler-Lagrange equation is
+            $$
+                  \frac{\partial F}{\partial v} - \frac{d}{du} \left( \frac{\partial F}{\partial v'} \right) = 0.
+            $$
+            And we have
+            \begin{align*}
+                  \begin{cases}
+                        \frac{\partial F}{\partial v}  & = \frac{\sin v(u) \cos v(u)}{\sqrt{[v'(u)]^2 + \sin^2 v(u)}} \\
+                        \frac{\partial F}{\partial v'} & = \frac{v'(u)}{\sqrt{[v'(u)]^2 + \sin^2 v(u)}}
+                  \end{cases}
+            \end{align*}
+            Similarly with \textbf{Beltrami Identity}, we can simplify the Euler-Lagrange equation as
+            \begin{align*}
+                  F - v'(u) \frac{\partial F}{\partial v'}                                           & = C = \text{constant} \Rightarrow                   \\
+                  \sqrt{[v'(u)]^2 + \sin^2v(u)} - v'(u) \frac{v'(u)}{\sqrt{[v'(u)]^2 + \sin^2 v(u)}} & = C \Rightarrow                                     \\
+                  \sin^2 v(u)                                                                        & = C \sqrt{[v'(u)]^2 + \sin^2 v(u)} \Rightarrow      \\
+                  [v'(u)]^2                                                                          & = \frac{\sin^4 v(u)}{C^2} - \sin^2 v(u) \Rightarrow \\
+                  v'(u)                                                                              & = \pm \sqrt{\frac{\sin^4 v(u)}{C^2} - \sin^2 v(u)}
+            \end{align*}
+            Separate variables and integrate both sides, we get
+            \begin{align*}
+                  \int \frac{C^2 dv(u)}{\sqrt{sin^4 v(u) - C^2 \sin^2 v(u)}} & = \pm \int du.
+            \end{align*}
+            Using the identity from hint, we have
+            \begin{align*}
+                  - \sin^{-1} \left( \frac{\cot v(u)}{\sqrt{\frac{1}{C^2} - 1}} \right) & = \pm u + C' \Rightarrow                                  \\
+                  \cot v(u)                                                             & = - \sin(\pm u + C') \sqrt{\frac{1}{C^2} - 1} \Rightarrow \\
+                  \tan v(u)                                                             & = - \frac{\frac{C}{\sqrt{1 - C^2}}}{\sin (\pm u + C')}
+            \end{align*}
+            Absorbing the $\pm$ sign and rearrange constants, we can get
+            \begin{align*}
+                  v(u) = \arctan \left( \frac{C_1}{sin(u + C_2)} \right)
+            \end{align*}
+            Where $C_1, C_2$ are constants depending on the boundary conditions $(u_0, v_0)$ and $(u_1, v_1)$.
+
+            The shape visualized with \href{https://www.desmos.com/calculator}{Desmos} looks like a periodic function with a period of $2\pi$, where $C_1$ controls amplitude $C_2$ controls phase.
+            This is reasonable since $u$ is the longitude angle ranging $[0, 2\pi]$, and $v$ is the latitude angle ranging $[0, \pi]$, so the curve should be periodic with a period of $2\pi$ since it's a function of $u$.
+
+            \clearpage
       \item In the brachistochrone problem (“ski-slope” in lecture), suppose the right endpoint $(x_1, y_1)$ is not specified exactly, but is merely constrained to satisfy an equation of the form $g(x, y) = 0$.
             Show that the optimizing curve $y(x)$ is perpendicular to the iso-contour $g(x, y) = 0$ at $(x_1, y_1)$.
 
@@ -146,6 +194,7 @@
                         (ii) Observe that the curves are written differently, one explicitly as $y(x)$, the other implicitly as $g(x, y) = 0$.
                         Think about how to compare the slopes of the two curves despite these different representations.]
 
+            \clearpage
       \item \begin{enumerate}
                   \item Using Lagrangian Dynamics, derive the relationship between joint torques and the angular state (angles, angular velocities, and angular accelerations) of the following balanced manipulator:
                         \begin{figure}[H]
