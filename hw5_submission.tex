@@ -103,29 +103,23 @@
                         \frac{\partial F}{\partial y'} & = 2\pi y(x) \frac{y'(x)}{\sqrt{1 + (y'(x))^2}}
                   \end{cases}
             \end{align*}
-            We can simplify the Euler-Lagrange equation as
+            Also because $F(x, y(x), y'(x))$ does not explicitly depend on $x$, we can use the \textbf{\href{https://en.wikipedia.org/wiki/Beltrami_identity}{Beltrami Identity}} to simplify the equation as
             \begin{align*}
-                  \frac{\partial F}{\partial y} - \frac{d}{dx} \left( \frac{\partial F}{\partial y'} \right) & = 2\pi \sqrt{1 + (y'(x))^2} - \frac{d}{dx} \left( 2\pi y(x) \frac{y'(x)}{\sqrt{1 + (y'(x))^2}} \right)                 \\
-                                                                                                             & = 2\pi \sqrt{1 + (y'(x))^2} - 2\pi \frac{d}{dx} \left( y(x) \frac{y'(x)}{\sqrt{1 + (y'(x))^2}} \right) = 0 \Rightarrow \\
-                  \frac{d}{dx} \left( \frac{y(x) y'(x)}{\sqrt{1 + (y'(x))^2}} \right)                        & = \sqrt{1 + (y'(x))^2}                                                                                                 \\
+                  F - y'(x) \frac{\partial F}{\partial y'}                                                                                     & = C = \text{constant} \Rightarrow \\
+                  2\pi y(x) \sqrt{1 + (y'(x))^2} - 2\pi y'(x) \frac{y(x) y'(x)}{\sqrt{1 + (y'(x))^2}} = 2\pi \frac{y(x)}{\sqrt{1 + (y'(x))^2}} & = C \Rightarrow                   \\
+                  y'(x)                                                                                                                        & = \pm \sqrt{(Cy)^2 - 1}
             \end{align*}
-            Because $F(x, y(x), y'(x))$ does not explicitly depend on $x$, we can use the \textbf{Beltrami Identity} to simplify the equation as
-            \begin{align*}
-                  F - y'(x) \frac{\partial F}{\partial y'}                                            & = C = \text{constant} \Rightarrow                        \\
-                  2\pi y(x) \sqrt{1 + (y'(x))^2} - 2\pi y'(x) \frac{y(x) y'(x)}{\sqrt{1 + (y'(x))^2}} & = 2\pi \frac{y(x)}{\sqrt{1 + (y'(x))^2}} = C \Rightarrow \\
-                  y'(x) = \pm \sqrt{(Cy)^2 - 1}
-            \end{align*}
-            Note that the constant $C$ is absorbing all the constants in the equation, so we can solve the equation by integrating both sides as
+            Note that the constant $C$ is absorbing all the constants in the equation, so we can solve the equation by separating variables and integrating both sides as
             $$
                   \int \frac{dy}{\sqrt{(Cy)^2 - 1}} = \pm \int dx.
             $$
             Then we get
             $$
-                  y(x) = \frac{cosh(C(x - x_0))}{C}
+                  y(x) = C_1 \cosh\left(\frac{x - C_2}{C_1}\right)
             $$
-            Where $C$ depends on the boundary conditions $(x_0, y_0)$ and $(x_1, y_1)$.
+            Where constants $C_1$ and $C_2$ depends on the boundary conditions $(x_0, y_0)$ and $(x_1, y_1)$.
 
-            The shape visualized with \href{https://www.desmos.com/calculator}{Desmos} looks like a thin vase with big top and bottom, which is reasonable since we want the shape to shrink a little before it tries to reach another boundary, in order to minimize the surface area.
+            The shape visualized with \href{https://www.desmos.com/calculator}{Desmos} looks like a thin vase with big top and bottom, which is reasonable since we want the shape to shrink a little before it reaches another boundary, in order to minimize the surface area.
 
             \clearpage
       \item Using Calculus of Variations, show that the shortest curve between two points on a sphere is an arc of a great circle.
@@ -137,7 +131,7 @@
                         Observe that u does not appear directly in the resulting integrand for arclength, so replace the Euler-Lagrange equation with another, as in lecture.
                         You may find the following identity useful:
                         $$
-                              \int \frac{a}{\sqrt{\sin^4 w - a^2 \sin^2 w}} dw = - \sin^{-1}(\frac{\cot w}{\sqrt{\frac{1}{a^2} - 1}}) + k,
+                              \int \frac{a dw}{\sqrt{\sin^4 w - a^2 \sin^2 w}} = - \sin^{-1}(\frac{\cot w}{\sqrt{\frac{1}{a^2} - 1}}) + k,
                         $$
                         where a and k are appropriate constants.]
 
@@ -147,7 +141,14 @@
             $$
                   L = \int_{u_0}^{u_1} R \sqrt{[v'(u)]^2 + \sin^2v(u)} du.
             $$
-            Now remove constant linear parameter $R$ and let $F(u, v(u), v'(u)) = \sqrt{[v'(u)]^2 + \sin^2v(u)}$.
+            Now remove constant linear parameter $R$ and let $F(u, v(u), v'(u)) = \sqrt{[v'(u)]^2 + \sin^2v(u)}$. The optimization program is formally constructed as
+            \begin{align*}
+                  \min_v J(v) & = \int_{u_0}^{u_1} F(u, v(u), v'(u)) du, \\
+                  s.t.        & \begin{cases}
+                        v_0 & = v(u_0) \\
+                        v_1 & = v(u_1)
+                  \end{cases}
+            \end{align*}
             Omitting all the derivation we did in Question 1, the Euler-Lagrange equation is
             $$
                   \frac{\partial F}{\partial v} - \frac{d}{du} \left( \frac{\partial F}{\partial v'} \right) = 0.
@@ -159,7 +160,7 @@
                         \frac{\partial F}{\partial v'} & = \frac{v'(u)}{\sqrt{[v'(u)]^2 + \sin^2 v(u)}}
                   \end{cases}
             \end{align*}
-            Similarly with \textbf{Beltrami Identity}, we can simplify the Euler-Lagrange equation as
+            Similar to Q1, because $F(u, v(u), v'(u))$ does not explicitly depends on $u$, we can apply the \textbf{\href{https://en.wikipedia.org/wiki/Beltrami_identity}{Beltrami Identity}} to simplify the Euler-Lagrange equation as
             \begin{align*}
                   F - v'(u) \frac{\partial F}{\partial v'}                                           & = C = \text{constant} \Rightarrow                   \\
                   \sqrt{[v'(u)]^2 + \sin^2v(u)} - v'(u) \frac{v'(u)}{\sqrt{[v'(u)]^2 + \sin^2 v(u)}} & = C \Rightarrow                                     \\
@@ -167,9 +168,9 @@
                   [v'(u)]^2                                                                          & = \frac{\sin^4 v(u)}{C^2} - \sin^2 v(u) \Rightarrow \\
                   v'(u)                                                                              & = \pm \sqrt{\frac{\sin^4 v(u)}{C^2} - \sin^2 v(u)}
             \end{align*}
-            Separate variables and integrate both sides, we get
+            Separate variables and integrate both sides, then we can get
             \begin{align*}
-                  \int \frac{C^2 dv(u)}{\sqrt{sin^4 v(u) - C^2 \sin^2 v(u)}} & = \pm \int du.
+                  \int \frac{C^2 dv(u)}{\sqrt{\sin^4 v(u) - C^2 \sin^2 v(u)}} & = \pm \int du.
             \end{align*}
             Using the identity from hint, we have
             \begin{align*}
@@ -177,9 +178,9 @@
                   \cot v(u)                                                             & = - \sin(\pm u + C') \sqrt{\frac{1}{C^2} - 1} \Rightarrow \\
                   \tan v(u)                                                             & = - \frac{\frac{C}{\sqrt{1 - C^2}}}{\sin (\pm u + C')}
             \end{align*}
-            Absorbing the $\pm$ sign and rearrange constants, we can get
+            Absorbing the signs and rearranging the constants, we can get
             \begin{align*}
-                  v(u) = \arctan \left( \frac{C_1}{sin(u + C_2)} \right)
+                  v(u) = \arctan \left( \frac{C_1}{\sin(u + C_2)} \right)
             \end{align*}
             Where $C_1, C_2$ are constants depending on the boundary conditions $(u_0, v_0)$ and $(u_1, v_1)$.
 
@@ -193,6 +194,10 @@
                   [Hints: (i) Use an equation from lecture rather than derive everything from scratch.
                         (ii) Observe that the curves are written differently, one explicitly as $y(x)$, the other implicitly as $g(x, y) = 0$.
                         Think about how to compare the slopes of the two curves despite these different representations.]
+
+            \textbf{Solution:}
+
+
 
             \clearpage
       \item \begin{enumerate}
