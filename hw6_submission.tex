@@ -1,0 +1,85 @@
+\documentclass[conference,onecolumn]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx,subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{minted}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\IEEEoverridecommandlockouts
+
+\lstset{
+    language=MATLAB,             % Set language to MATLAB
+    basicstyle=\ttfamily\small,  % Set font to small and monospaced
+    keywordstyle=\color{blue},   % Color keywords
+    stringstyle=\color{orange},   % Color strings
+    commentstyle=\color{gray},   % Color comments
+    showstringspaces=false,      % Do not display string spaces
+    frame=single,                % Add a frame around the code
+    breaklines=true              % Line breaks for long lines
+}
+
+\setlist[enumerate,1]{label=\arabic{enumi}.}
+\setlist[enumerate,2]{label=(\alph*)}
+\setlist[enumerate,3]{label=\roman*.}
+
+\begin{document}
+
+\title{\Large Assignment 6 --- Math Fundamentals for Robotics 16-811, Fall 2024}
+
+\author{
+      \IEEEauthorblockN{Mukai Yu}
+      \IEEEauthorblockA{\textit{MSR, CMU} \\
+            Pittsburgh, PA\\
+            \href{mailto:mukaiy@andrew.cmu.edu}{mukaiy@andrew.cmu.edu}}
+}
+
+\maketitle
+
+\begin{enumerate}
+      \item Implement two-dimensional (2D) convex hull.
+
+            Your algorithm should take as input a finite set of 2D points and produce as output a polygon constituting the boundary of the minimal convex set containing all the input points.
+            (“minimal convex set” means that the set is a subset of any other convex set that contains all the input points.)
+
+      \item Implement an algorithm for finding shortest paths in 2D polygonal environments.
+
+            The input to your algorithm should consist of a collection of nondegenerate convex polygons, a start location, and a goal location.
+            The output should be a piecewise linear path that does not pass through the interior of any polygon and is as short as possible, if such a path exists.
+            (Otherwise, your algorithm should indicate that no path exists.)
+            One situation in which no path exists is if the start or goal is in the interior of a polygon.
+
+            Notes: (i) The polygons are allowed to overlap.
+            (ii) The solution path is allowed to touch the boundaries of polygons, but is not allowed to pass through any polygon's interior.
+
+      \item Combine your code for parts (1) and (2), along with some additional code, to implement shortest-path motion planning for convex polygons in two dimensions (translations only, no rotations).
+
+            Specifically, the input to your algorithm should consist of a “robot” and its environment, along with start and goal configurations for the robot.
+            The output should be a piecewise linear path as described below.
+            (The robot moves only in straight lines.
+            No rotations.)
+
+            The robot should be a nondegenerate convex polygon.
+            The environment should consist of a collection of nondegenerate (possibly overlapping) convex polygons.
+            Given start and goal configurations of the robot, your algorithm should produce a shortest intersection-free path between the start and goal, if such a path exists.
+            “Intersection-free” means that the robot may touch obstacle boundaries, even slide along obstacle boundaries, but may not touch the interior of any obstacle.
+            If no such path exists, your algorithm should report that fact.
+\end{enumerate}
+
+\end{document}
