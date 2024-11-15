@@ -259,16 +259,32 @@
             \begin{align*}
                   \frac{g_x}{g_x + g_y y(x_1)} F \bigg|_{x = x_1}                                             & = C \Rightarrow \\
                   \frac{g_x}{g_x + g_y y(x_1)} \frac{\sqrt{1 + (y'(x_1))^2}}{\sqrt{y_0 - y(x_1)}}             & = C \Rightarrow \\
-                  \frac{g_x^2 (1 + [y'(x_1)]^2)}{(g_x^2 + 2 g_x g_y y(x_1) + g_y^2 [y(x_1)]^2)(y_0 - y(x_1))} & = C^2           \\
-                  % \frac{1}{\sqrt{(y_0 - y(x))(1 + (y'(x))^2)}}                                                & = C \Rightarrow                                         \\
-                  % (y_0 - y(x))(1 + (y'(x))^2)                                                                 & = \frac{1}{C^2} \Rightarrow                             \\
-                  % y'(x)                                                                                       & = \pm \frac{\sqrt{C - (y_0 - y(x))}}{\sqrt{y_0 - y(x)}}
+                  \frac{g_x^2 (1 + [y'(x_1)]^2)}{(g_x^2 + 2 g_x g_y y(x_1) + g_y^2 [y(x_1)]^2)(y_0 - y(x_1))} & = C^2
             \end{align*}
-            % Because the slope curve is descending, we must have the negative sign, so we have
-            % \begin{align*}
-            %       y'(x) = -\frac{\sqrt{C - (y_0 - y(x))}}{\sqrt{y_0 - y(x)}}
-            % \end{align*}
-            omg this looks horrible again, what should I do?
+            omg this looks horrible again, let's try another way.
+
+            Let's examine the endpoint condition again, we have $g(x_1, y_1) = 0$, so the variations $\delta x$, $\delta y$ are related by
+            \begin{align*}
+                  g_x \delta x_1 + g_y \delta y_1 = 0 \Rightarrow \delta x_1 = - \frac{g_y}{g_x} \delta y_1
+            \end{align*}
+            And from some ChatGPT conversations, we learned the transversality condition
+            \begin{align*}
+                  \left[ F - y' \frac{\partial F}{\partial y'} \right] \delta x_1 + \frac{\partial F}{\partial y'} \delta y_1 = 0
+            \end{align*}
+            Substituting with the above equation, we have
+            \begin{align*}
+                  \left[ F - y' \frac{\partial F}{\partial y'} \right] \left( - \frac{g_y}{g_x} \delta y_1 \right) + \frac{\partial F}{\partial y'} \delta y_1 = 0 \Rightarrow \\
+                  \left( \frac{\partial F}{\partial y'} - \left[ F - y' \frac{\partial F}{\partial y'} \right] \frac{g_y}{g_x} \right) \delta y_1 = 0
+            \end{align*}
+            Since $\delta y_1$ is arbitrary, we must have
+            \begin{align*}
+                  \frac{\partial F}{\partial y'} - \left[ F - y' \frac{\partial F}{\partial y'} \right] \frac{g_y}{g_x} = 0
+            \end{align*}
+            Substituting with $F - y' \frac{\partial F}{\partial y'} = C$, we have
+            \begin{align*}
+                  y' C - C(\frac{g_y}{g_x}) = 0 \Rightarrow y' = \frac{g_y}{g_x}
+            \end{align*}
+            Which exactly means that the optimizing curve $y(x)$ is perpendicular to the iso-contour $g(x, y) = 0$ at $(x_1, y_1)$.
 
             \clearpage
       \item \begin{enumerate}
