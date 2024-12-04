@@ -120,6 +120,77 @@ def min_convex_set(points: np.ndarray) -> np.ndarray:
             Notes: (i) The polygons are allowed to overlap.
             (ii) The solution path is allowed to touch the boundaries of polygons, but is not allowed to pass through any polygon's interior.
 
+            \textbf{Solution:}
+
+            Procedure:
+            \begin{enumerate}
+                  \item Verify that the start and goal points are not inside any polygon, and if start -- goal is a trivial solution
+                  \item Remove any polygon points if they are inside any other polygon
+                  \item Construct a visibility graph by connecting all pairs of valid vertices + start + goal, if the edge does not intersect any polygon (touching is allowed)
+                  \item Use Dijkstra's algorithm to find the shortest path
+            \end{enumerate}
+
+            \begin{lstlisting}[language=Python]
+def find_shortest_path(start: np.ndarray, goal: np.ndarray, polygons: list) -> list:
+    """
+    Find the shortest path from start to goal avoiding polygon interiors.
+
+    Args:
+        start (np.ndarray): Start point of shape (2,).
+        goal (np.ndarray): Goal point of shape (2,).
+        polygons (list): List of np.ndarray, each of shape (n_i, 2), representing convex polygons.
+
+    Returns:
+        list: List of points representing the shortest path, or "No path exists".
+    """
+    # Verify that start and goal are not inside any polygon and trivial solutions
+    if in_polygons(start, polygons) or in_polygons(goal, polygons):
+        return "No path exists"
+    if not line_intersects_polygons(start, goal, polygons):
+        return [start, goal]
+
+    # No trivial solution; construct a visibility graph
+    G = nx.Graph()
+
+    # Remove any polygon points if they are inside any other polygon
+    valid_vertices = []
+    for polygon in polygons:
+        for vertex in polygon:
+            if not in_polygons(vertex, polygons):
+                valid_vertices.append(vertex)
+            else:
+                # Vertex is inside another polygon; do not include it
+                pass
+
+    # Include start and goal in the list of valid vertices
+    all_vertices = [start, goal] + valid_vertices
+
+    # Build the visibility graph by connecting all pairs of valid vertices
+    for i, u in enumerate(all_vertices):
+        u_tuple = tuple(u)
+        G.add_node(u_tuple)
+        for j in range(i + 1, len(all_vertices)):
+            v = all_vertices[j]
+            v_tuple = tuple(v)
+            if not line_intersects_polygons(u, v, polygons):
+                weight = np.linalg.norm(u - v)
+                G.add_edge(u_tuple, v_tuple, weight=weight)
+
+    # Use Dijkstra's algorithm from networkx
+    try:
+        path = nx.dijkstra_path(G, tuple(start), tuple(goal), weight="weight")
+        path_coords = [np.array(node) for node in path]
+        return path_coords
+    except nx.NetworkXNoPath:
+        return "No path exists"
+            \end{lstlisting}
+
+            \begin{figure}[H]
+                  \centering
+                  \includegraphics[width=0.99\textwidth]{figs/shortest_path.pdf}
+                  \caption{Shortest path in a 2D polygonal environment}
+            \end{figure}
+
             \clearpage
       \item Combine your code for parts (1) and (2), along with some additional code, to implement shortest-path motion planning for convex polygons in two dimensions (translations only, no rotations).
 
@@ -133,6 +204,10 @@ def min_convex_set(points: np.ndarray) -> np.ndarray:
             Given start and goal configurations of the robot, your algorithm should produce a shortest intersection-free path between the start and goal, if such a path exists.
             “Intersection-free” means that the robot may touch obstacle boundaries, even slide along obstacle boundaries, but may not touch the interior of any obstacle.
             If no such path exists, your algorithm should report that fact.
+
+            \textbf{Solution:}
+
+            This is basically constructing safe configuration space with respect to the robot's anchor point then Q2.
 \end{enumerate}
 
 \end{document}
