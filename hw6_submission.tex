@@ -56,7 +56,7 @@
       \item Implement two-dimensional (2D) convex hull.
 
             Your algorithm should take as input a finite set of 2D points and produce as output a polygon constituting the boundary of the minimal convex set containing all the input points.
-            (“minimal convex set” means that the set is a subset of any other convex set that contains all the input points.)
+            (“minimal convex set” means that the set is a subset of any other convex set that contains all the input points.) \\
 
             \textbf{Solution:}
 
@@ -118,7 +118,7 @@ def min_convex_set(points: np.ndarray) -> np.ndarray:
             One situation in which no path exists is if the start or goal is in the interior of a polygon.
 
             Notes: (i) The polygons are allowed to overlap.
-            (ii) The solution path is allowed to touch the boundaries of polygons, but is not allowed to pass through any polygon's interior.
+            (ii) The solution path is allowed to touch the boundaries of polygons, but is not allowed to pass through any polygon's interior. \\
 
             \textbf{Solution:}
 
@@ -203,11 +203,78 @@ def find_shortest_path(start: np.ndarray, goal: np.ndarray, polygons: list) -> l
             The environment should consist of a collection of nondegenerate (possibly overlapping) convex polygons.
             Given start and goal configurations of the robot, your algorithm should produce a shortest intersection-free path between the start and goal, if such a path exists.
             “Intersection-free” means that the robot may touch obstacle boundaries, even slide along obstacle boundaries, but may not touch the interior of any obstacle.
-            If no such path exists, your algorithm should report that fact.
+            If no such path exists, your algorithm should report that fact. \\
 
             \textbf{Solution:}
 
             This is basically constructing safe configuration space with respect to the robot's anchor point then Q2.
+
+            Here's how we can compute a safe configuration space for a robot with a given convex polygon obstacle using Minkowski sum:
+            \begin{lstlisting}[language=Python]
+def compute_safe_polygon(robot: np.ndarray, obstacle: np.ndarray) -> np.ndarray:
+    """
+    Compute the safe polygon of a robot with respect to an obstacle.
+    The resulting polygon represents the Minkowski sum of the robot and the obstacle,
+    which effectively enlarges the obstacle to account for the robot's shape.
+
+    Args:
+        robot (np.ndarray): (n, 2) vertices of the robot in counter-clockwise order
+        obstacle (np.ndarray): (m, 2) vertices of the obstacle in counter-clockwise order
+
+    Returns:
+        np.ndarray: (k, 2) vertices of the safe polygon in counter-clockwise order
+    """
+    n = len(robot)
+    m = len(obstacle)
+
+    # Compute edge vectors for robot and obstacle
+    E_p = [robot[(i + 1) % n] - robot[i] for i in range(n)]
+    E_q = [obstacle[(i + 1) % m] - obstacle[i] for i in range(m)]
+
+    # Compute angles of edge vectors
+    angles_p = [np.arctan2(e[1], e[0]) for e in E_p]
+    angles_q = [np.arctan2(e[1], e[0]) for e in E_q]
+
+    # Normalize angles to [0, 2\pi)
+    angles_p = [(a + 2 * np.pi) % (2 * np.pi) for a in angles_p]
+    angles_q = [(a + 2 * np.pi) % (2 * np.pi) for a in angles_q]
+
+    # Initialize indices and starting point
+    i = j = 0
+    s = robot[0] + obstacle[0]
+    S = [s]
+
+    while i < n or j < m:
+        angle_p = angles_p[i % n] if i < n else float('inf')
+        angle_q = angles_q[j % m] if j < m else float('inf')
+
+        e_p = E_p[i % n] if i < n else np.array([0, 0])
+        e_q = E_q[j % m] if j < m else np.array([0, 0])
+
+        if abs(angle_p - angle_q) < 1e-10:
+            # Angles are equal; advance both edges
+            s = s + e_p + e_q
+            i += 1
+            j += 1
+        elif angle_p < angle_q:
+            # Advance robot edge
+            s = s + e_p
+            i += 1
+        else:
+            # Advance obstacle edge
+            s = s + e_q
+            j += 1
+
+        S.append(s)
+
+    return np.array(S)
+            \end{lstlisting}
+
+            \begin{figure}[H]
+                  \centering
+                  \includegraphics[width=0.99\textwidth]{figs/safe_shortest_path.pdf}
+                  \caption{Shortest path motion planning for convex polygons and convex robot}
+            \end{figure}
 \end{enumerate}
 
 \end{document}
